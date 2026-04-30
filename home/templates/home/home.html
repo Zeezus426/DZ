@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AusTrade Commodities | Premium Australian Exporter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f8f9fa;
+        }
+
+        /* Navigation */
+        nav {
+            background: #0f172a;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav .logo span {
+            color: #eab308;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #e5e7eb;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #eab308;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23ffffff10" stroke-width="0.5"/><circle cx="50" cy="50" r="30" fill="none" stroke="%23ffffff10" stroke-width="0.5"/><circle cx="50" cy="50" r="20" fill="none" stroke="%23ffffff10" stroke-width="0.5"/></svg>') repeat;
+            background-size: 200px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: #eab308;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #eab308;
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #ca8a04;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #eab308;
+        }
+
+        .btn-secondary:hover {
+            background: #eab308;
+            color: #0f172a;
+        }
+
+        /* Key Commodities Section */
+        .commodities {
+            padding: 6rem 2rem;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .commodities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .commodity-card {
+            background: #f8fafc;
+            padding: 2.5rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .commodity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: #eab308;
+        }
+
+        .commodity-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .commodity-card h3 {
+            font-size: 1.5rem;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+
+        .commodity-card p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .commodity-card .specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .commodity-card .specs span {
+            background: #eab30820;
+            color: #854d0e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Trust Badges Section */
+        .trust-badges {
+            padding: 5rem 2rem;
+            background: #0f172a;
+        }
+
+        .trust-badges .section-title h2 {
+            color: #fff;
+        }
+
+        .trust-badges .section-title p {
+            color: #94a3b8;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .badge-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            transition: all 0.3s;
+        }
+
+        .badge-card:hover {
+            background: rgba(234, 179, 8, 0.1);
+            border-color: #eab308;
+        }
+
+        .badge-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-card h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Global Reach Section */
+        .global-reach {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .map-container {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path d="M10,30 Q20,10 40,25 T70,20 T90,35" fill="none" stroke="%23eab30820" stroke-width="0.5"/><circle cx="20" cy="30" r="2" fill="%23eab308"/><circle cx="50" cy="25" r="2" fill="%23eab308"/><circle cx="80" cy="30" r="2" fill="%23eab308"/></svg>') repeat;
+            background-size: 300px;
+            opacity: 0.3;
+        }
+
+        .map-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #eab308;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
+            color: #cbd5e1;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .destinations {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .destination-tag {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            border: 1px solid #eab308;
+        }
+
+        /* Footer */
+        footer {
+            background: #020617;
+            color: #94a3b8;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #eab308;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .commodities-grid,
+            .badges-grid,
+            .map-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <span>⬡</span> AusTrade Commodities
+        </div>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#commodities">Commodities</a></li>
+            <li><a href="#reach">Global Reach</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Premium Australian<br><span>Hard Coking Coal</span> & Iron Ore Exporter</h1>
+            <p>Delivering world-class resources to global markets with integrity, reliability, and sustainable practices. Your trusted partner in commodity trading.</p>
+            <div class="hero-cta">
+                <a href="#commodities" class="btn btn-primary">Explore Commodities</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Commodities Section -->
+    <section class="commodities" id="commodities">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Commodities</h2>
+                <p>Sourced from Australia's finest mines, processed to international standards</p>
+            </div>
+
+            <div class="commodities-grid">
+                <div class="commodity-card">
+                    <div class="commodity-icon">⚫</div>
+                    <h3>Hard Coking Coal</h3>
+                    <p>Premium metallurgical coal essential for steel production. Low ash, high fluidity, and excellent coking properties.</p>
+                    <div class="specs">
+                        <span>Ash: 8-10%</span>
+                        <span>Sulfur: 0.5-0.7%</span>
+                        <span>CSN: 6-8</span>
+                    </div>
+                </div>
+
+                <div class="commodity-card">
+                    <div class="commodity-icon">🔴</div>
+                    <h3>Iron Ore Fines</h3>
+                    <p>High-grade iron ore fines for direct reduction and blast furnace applications. Consistent quality guaranteed.</p>
+                    <div class="specs">
+                        <span>Fe: 62-65%</span>
+                        <span>Silica: 3-5%</span>
+                        <span>Alumina: 2-3%</span>
+                    </div>
+                </div>
+
+                <div class="commodity-card">
+                    <div class="commodity-icon">🟤</div>
+                    <h3>Thermal Coal</h3>
+                    <p>Energy-grade thermal coal for power generation. Clean burning with consistent calorific value.</p>
+                    <div class="specs">
+                        <span>CV: 5500-6000</span>
+                        <span>Ash: 12-15%</span>
+                        <span>Moisture: 8-10%</span>
+                    </div>
+                </div>
+
+                <div class="commodity-card">
+                    <div class="commodity-icon">🌾</div>
+                    <h3>Australian Wheat</h3>
+                    <p>Premium milling wheat from Australia's fertile regions. High protein content for superior baking quality.</p>
+                    <div class="specs">
+                        <span>Protein: 11-13%</span>
+                        <span>Moisture: 12% max</span>
+                        <span>Falling Number: 300+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Badges Section -->
+    <section class="trust-badges">
+        <div class="container">
+            <div class="section-title">
+                <h2>Trusted by Industry Leaders</h2>
+                <p>Certified, compliant, and committed to excellence</p>
+            </div>
+
+            <div class="badges-grid">
+                <div class="badge-card">
+                    <div class="badge-icon">🏆</div>
+                    <h4>Minerals Council</h4>
+                    <p>Proud member of Minerals Council of Australia</p>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">✓</div>
+                    <h4>ISO 9001:2015</h4>
+                    <p>Certified Quality Management System</p>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">🌍</div>
+                    <h4>ISO 14001</h4>
+                    <p>Environmental Management Certified</p>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">📜</div>
+                    <h4>Export License</h4>
+                    <p>Australian Government Licensed Exporter</p>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">🤝</div>
+                    <h4>GrainGrowers</h4>
+                    <p>Grain Growers Association Member</p>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">⚖️</div>
+                    <h4>SGS Certified</h4>
+                    <p>Independent Quality Verification</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Reach Section -->
+    <section class="global-reach" id="reach">
+        <div class="container">
+            <div class="section-title">
+                <h2>Global Reach, Local Excellence</h2>
+                <p>Serving markets across Asia, Europe, and beyond</p>
+            </div>
+
+            <div class="map-container">
+                <div class="map-stats">
+                    <div class="stat-card">
+                        <div class="number">25+</div>
+                        <div class="label">Countries Served</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">5M+</div>
+                        <div class="label">Tonnes Exported</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">15+</div>
+                        <div class="label">Years Experience</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">99%</div>
+                        <div class="label">On-Time Delivery</div>
+                    </div>
+                </div>
+
+                <div class="destinations">
+                    <span class="destination-tag">🇨🇳 China</span>
+                    <span class="destination-tag">🇯🇵 Japan</span>
+                    <span class="destination-tag">🇰🇷 South Korea</span>
+                    <span class="destination-tag">🇮🇳 India</span>
+                    <span class="destination-tag">🇹🇼 Taiwan</span>
+                    <span class="destination-tag">🇻🇳 Vietnam</span>
+                    <span class="destination-tag">🇩🇪 Germany</span>
+                    <span class="destination-tag">🇮🇹 Italy</span>
+                    <span class="destination-tag">🇬🇧 United Kingdom</span>
+                    <span class="destination-tag">🇧🇷 Brazil</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>AusTrade Commodities</h4>
+                <p>Your trusted partner in premium Australian commodity exports. Quality, reliability, and sustainability in every shipment.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#commodities">Commodities</a></li>
+                    <li><a href="#reach">Global Reach</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>📍 Sydney, Australia</li>
+                    <li>📞 +61 2 8000 0000</li>
+                    <li>✉️ info<a href="http://austradecommodities.com">@austradecommodities.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AusTrade Commodities. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
