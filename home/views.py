@@ -125,3 +125,19 @@ www.austradecommodities.com
             'success': False,
             'error': f'Failed to send email: {str(e)}'
         }, status=500)
+
+
+def about(request):
+    if request.method != 'GET':
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid request method'
+        }, status=405)
+    return render(request, 'home/about.html')
+
+def certification(request):
+    if request.method != 'GET':
+        return JsonResponse({
+            'success': False,
+        })
+    return render(request, 'home/certification.html')
