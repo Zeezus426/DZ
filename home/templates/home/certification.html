@@ -1,1 +1,211 @@
-Hello world!
+{% extends "home/base.html" %}
+
+{% block title %}Certification | DZ Exports{% endblock %}
+
+{% block extra_css %}
+.cert-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+    color: #fff;
+}
+
+.cert-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.cert-hero h1 span {
+    color: #eab308;
+}
+
+.cert-section {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cert-section h2 {
+    color: #0f172a;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.cert-section p {
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.cert-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+}
+
+.cert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #eab308;
+}
+
+.cert-card .icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.cert-card h3 {
+    color: #0f172a;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.cert-card .cert-number {
+    color: #eab308;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.cert-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+    text-align: left;
+    margin: 0;
+}
+
+.company-info {
+    background: #f8fafc;
+    padding: 3rem 2rem;
+    margin-top: 4rem;
+    border-radius: 12px;
+}
+
+.company-info h3 {
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.info-item {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.info-item .label {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.info-item .value {
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+{% endblock %}
+
+{% block content %}
+<section class="cert-hero">
+    <h1>Our <span>Certifications</span></h1>
+    <p>Committed to excellence, quality, and compliance</p>
+</section>
+
+<section class="cert-section">
+    <h2>Industry Certifications</h2>
+    <p>We maintain the highest standards in the industry through rigorous certification processes and continuous compliance monitoring.</p>
+
+    <div class="certs-grid">
+        <div class="cert-card">
+            <span class="icon">✓</span>
+            <h3>ISO 9001:2015</h3>
+            <span class="cert-number">Cert No: AU-9001-2024-DZ001</span>
+            <p>Quality Management System certified by SGS Australia. Demonstrates our ability to consistently provide products that meet customer and regulatory requirements.</p>
+        </div>
+
+        <div class="cert-card">
+            <span class="icon">🌍</span>
+            <h3>ISO 14001</h3>
+            <span class="cert-number">Cert No: AU-14001-2024-DZ002</span>
+            <p>Environmental Management System certified. Shows our commitment to minimizing environmental impact and complying with environmental regulations.</p>
+        </div>
+
+        <div class="cert-card">
+            <span class="icon">🏆</span>
+            <h3>Minerals Council of Australia</h3>
+            <span class="cert-number">Member ID: MCA-DZ-2024</span>
+            <p>Proud member representing the Australian minerals industry, ensuring we adhere to best practices and industry standards.</p>
+        </div>
+
+        <div class="cert-card">
+            <span class="icon">📜</span>
+            <h3>Export License</h3>
+            <span class="cert-number">Lic No: DFAT-EXP-2024-DZ8842</span>
+            <p>Authorized by the Australian Government Department of Foreign Affairs and Trade to export commodities internationally.</p>
+        </div>
+
+        <div class="cert-card">
+            <span class="icon">⚖️</span>
+            <h3>SGS Certified</h3>
+            <span class="cert-number">Lab ID: SGS-AU-DZ-0247</span>
+            <p>All our products undergo independent quality verification by SGS, the world's leading inspection, verification, testing, and certification company.</p>
+        </div>
+
+        <div class="cert-card">
+            <span class="icon">🤝</span>
+            <h3>GrainGrowers Association</h3>
+            <span class="cert-number">Member ID: GGA-DZ-2024</span>
+            <p>Active member supporting Australian grain growers and promoting sustainable agricultural practices.</p>
+        </div>
+    </div>
+
+    <div class="company-info">
+        <h3>Company Details</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="label">Company Name</div>
+                <div class="value">DZ Commodities Pty Ltd</div>
+            </div>
+            <div class="info-item">
+                <div class="label">ABN</div>
+                <div class="value">12 345 678 901</div>
+            </div>
+            <div class="info-item">
+                <div class="label">ACN</div>
+                <div class="value">123 456 789</div>
+            </div>
+            <div class="info-item">
+                <div class="label">Established</div>
+                <div class="value">2009</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

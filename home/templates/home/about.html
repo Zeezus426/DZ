@@ -1,1 +1,108 @@
-hello world!
+{% extends "home/base.html" %}
+
+{% block title %}About Us | DZ Exports{% endblock %}
+
+{% block extra_css %}
+.about-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+    color: #fff;
+}
+
+.about-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.about-hero h1 span {
+    color: #eab308;
+}
+
+.about-section {
+    padding: 4rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-section h2 {
+    color: #0f172a;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-section p {
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.value-card {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.value-card .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.value-card h3 {
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+
+.value-card p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <h1>About <span>DZ Commodities</span></h1>
+    <p>Building bridges between Australian resources and global markets</p>
+</section>
+
+<section class="about-section">
+    <h2>Our Story</h2>
+    <p>DZ Commodities was founded with a vision to connect Australia's abundant natural resources with the growing demands of international markets. As a premier Australian exporter, we specialize in high-quality coal and iron ore commodities that power industries and drive economic growth worldwide.</p>
+    <p>With over 15 years of experience in the commodity trading sector, we have built lasting relationships with mining operations, logistics partners, and international buyers. Our deep understanding of global market dynamics, coupled with our commitment to quality and reliability, has established us as a trusted partner in the industry.</p>
+
+    <div class="values-grid">
+        <div class="value-card">
+            <div class="icon">🎯</div>
+            <h3>Quality First</h3>
+            <p>We never compromise on quality. Every shipment meets stringent international standards and undergoes rigorous testing.</p>
+        </div>
+
+        <div class="value-card">
+            <div class="icon">🤝</div>
+            <h3>Integrity</h3>
+            <p>Transparency and honesty are the foundation of our business relationships. We believe in doing what's right.</p>
+        </div>
+
+        <div class="value-card">
+            <div class="icon">🌱</div>
+            <h3>Sustainability</h3>
+            <p>We are committed to responsible resource extraction and sustainable practices that minimize environmental impact.</p>
+        </div>
+
+        <div class="value-card">
+            <div class="icon">🚀</div>
+            <h3>Innovation</h3>
+            <p>We continuously improve our processes and adopt new technologies to serve our clients better.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
