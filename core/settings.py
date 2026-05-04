@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -116,3 +117,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# Email Configuration
+# https://docs.djangoproject.com/en/6.0/topics/email/
+
+# Default email backend - use console backend for development
+# For production with Mailgun, change to: EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Email server settings (for production with Mailgun)
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('MAILGUN_USERNAME', '')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_PASSWORD', '')
+
+# Default from email and contact email
+DEFAULT_FROM_EMAIL = 'info@austradecommodities.com'
+CONTACT_EMAIL = 'info@austradecommodities.com'
+
+# Email subject prefix
+EMAIL_SUBJECT_PREFIX = '[AusTrade] '

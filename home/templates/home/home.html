@@ -408,6 +408,179 @@
             font-size: 0.9rem;
         }
 
+        /* Contact Form Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            padding: 2rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(234, 179, 8, 0.8);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .form-group label span {
+            color: #dc2626;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #eab308;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
+        }
+
+        .form-input.textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(234, 179, 8, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-error {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-success {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .form-failure {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #0f172a;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -426,6 +599,18 @@
             .badges-grid,
             .map-stats {
                 grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-header {
+                padding: 1.5rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -617,7 +802,7 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#commodities">Commodities</a></li>
                     <li><a href="#reach">Global Reach</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
+                    <li><button id="footer-contact-btn" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0; font-size: inherit; font-family: inherit; text-decoration: none;">Contact Us</button></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -627,11 +812,193 @@
                     <li>📞 +61 2 8000 0000</li>
                     <li>✉️ info<a href="http://austradecommodities.com">@austradecommodities.com</a></li>
                 </ul>
+                <button id="footer-contact-form-btn" class="btn btn-primary" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.75rem 1.5rem;">Send Us a Message</button>
             </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2024 AusTrade Commodities. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Contact Form Modal -->
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Contact Us</h2>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="form-message"></div>
+                <form id="contact-form" method="POST" action="/contact/">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_name">Name <span>*</span></label>
+                            {{ contact_form.name }}
+                            <div class="form-error" id="error-name"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_email">Email <span>*</span></label>
+                            {{ contact_form.email }}
+                            <div class="form-error" id="error-email"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_phone">Phone</label>
+                            {{ contact_form.phone }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_company">Company</label>
+                            {{ contact_form.company }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_subject">Subject <span>*</span></label>
+                        {{ contact_form.subject }}
+                        <div class="form-error" id="error-subject"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_message">Message <span>*</span></label>
+                        {{ contact_form.message }}
+                        <div class="form-error" id="error-message"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submit-btn">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('contact-modal');
+        const openButtons = document.querySelectorAll('.btn-secondary, #footer-contact-form-btn');
+        const closeButton = document.getElementById('close-modal');
+        const form = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const formMessage = document.getElementById('form-message');
+
+        // Open modal
+        openButtons.forEach(btn => {
+            if (btn.getAttribute('href') === '#contact') {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    modal.classList.add('active');
+                });
+            } else {
+                btn.addEventListener('click', () => {
+                    modal.classList.add('active');
+                });
+            }
+        });
+
+        document.getElementById('footer-contact-btn').addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        // Close modal
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear previous messages and errors
+            formMessage.innerHTML = '';
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+            document.querySelectorAll('.form-input').forEach(el => {
+                el.style.borderColor = '#e2e8f0';
+            });
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Sending<span class="loading-spinner"></span>';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/contact/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    formMessage.innerHTML = '<div class="form-success">' + data.message + '</div>';
+                    form.reset();
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        modal.classList.remove('active');
+                        formMessage.innerHTML = '';
+                    }, 3000);
+                } else {
+                    if (data.errors) {
+                        // Display field-specific errors
+                        for (const [field, errors] of Object.entries(data.errors)) {
+                            const errorDiv = document.getElementById('error-' + field);
+                            const inputField = document.getElementById('id_' + field);
+                            if (errorDiv && inputField) {
+                                errorDiv.textContent = errors[0].message;
+                                inputField.style.borderColor = '#dc2626';
+                            }
+                        }
+                    }
+                    if (data.error) {
+                        formMessage.innerHTML = '<div class="form-failure">' + data.error + '</div>';
+                    }
+                }
+            } catch (error) {
+                formMessage.innerHTML = '<div class="form-failure">An error occurred. Please try again.</div>';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Send Message';
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#contact') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
