@@ -128,16 +128,9 @@ www.austradecommodities.com
 
 
 def about(request):
-    if request.method != 'GET':
-        return JsonResponse({
-            'success': False,
-            'error': 'Invalid request method'
-        }, status=405)
-    return render(request, 'home/about.html')
+    contact_form = ContactForm()
+    return render(request, 'home/about.html', {'contact_form': contact_form})
 
 def certification(request):
-    if request.method != 'GET':
-        return JsonResponse({
-            'success': False,
-        })
-    return render(request, 'home/certification.html')
+    contact_form = ContactForm()
+    return render(request, 'home/certification.html', {'contact_form': contact_form})
