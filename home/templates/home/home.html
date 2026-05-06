@@ -1,57 +1,32 @@
 {% extends "home/base.html" %}
 
-{% block title %}DZ Exports | Premium Australian Exporter{% endblock %}
+{% block title %}DZ Commodities | Australian Coal Exporter{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero" id="home">
+<section class="hero">
     <div class="hero-content">
-        <h1>Premium Australian<br><span>Hard Coking Coal</span> & Iron Ore Exporter</h1>
-        <p>Delivering world-class resources to global markets with integrity, reliability, and sustainable practices. Your trusted partner in commodity trading.</p>
+        <h1>Premium Australian<br><span>Coal</span> Exporter</h1>
+        <p>Connecting Australian resources with global markets. Reliable sourcing, quality assurance, and dependable delivery.</p>
         <div class="hero-cta">
-            <a href="#commodities" class="btn btn-primary">Explore Commodities</a>
-            <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            <a href="#commodities" class="btn btn-primary">Our Commodities</a>
+            <a href="#contact" class="btn btn-secondary">Contact Us</a>
         </div>
     </div>
 </section>
 
-<!-- Key Commodities Section -->
-<section class="commodities" id="commodities">
+<!-- Commodities Section -->
+<section class="section commodities" id="commodities">
     <div class="container">
         <div class="section-title">
-            <h2>Our Premium Commodities</h2>
-            <p>Sourced from Australia's finest mines, processed to international standards</p>
+            <h2>Our Commodities</h2>
+            <div class="line"></div>
         </div>
 
         <div class="commodities-grid">
             <div class="commodity-card">
-                <div class="commodity-icon">⚫</div>
-                <h3>Lignite or Brown Coal</h3>
-                <p>Low-rank thermal coal with high moisture content, suitable for mine-mouth power generation. Moderate calorific value and low sulfur emissions.</p>
-                <div class="specs">
-                    <span>GAR: 3000-4000 kcal/kg</span>
-                    <span>Total Moisture: 35-44%</span>
-                    <span>Ash: 4-15%</span>
-                    <span>Sulfur: <1%</span>
-                </div>
-            </div>
-
-            <div class="commodity-card">
-                <div class="commodity-icon">🔴</div>
-                <h3>Sub-bituminous Coal</h3>
-                <p>Medium-rank thermal coal ideal for utility-scale electricity production. Low sulfur, consistent burn characteristics, and cost-effective energy output.</p>
-                <div class="specs">
-                    <span>GAR: 4200-5500 kcal/kg</span>
-                    <span>Total Moisture: 18-38%</span>
-                    <span>Ash: 3-10%</span>
-                    <span>Sulfur: 0.3-1.0%</span>
-                </div>
-            </div>
-
-            <div class="commodity-card">
-                <div class="commodity-icon">🟤</div>
-                <h3>Bituminous Thermal Coal</h3>
-                <p>High-calorific thermal coal optimized for industrial boilers and power plants. Balanced volatile matter and ash content for efficient combustion.</p>
+                <h3>Thermal Coal</h3>
+                <p>High-quality thermal coal for power generation. Consistent calorific value and low sulfur content for efficient energy production.</p>
                 <div class="specs">
                     <span>GAR: 5500-7000 kcal/kg</span>
                     <span>Ash: 3-12%</span>
@@ -60,9 +35,8 @@
             </div>
 
             <div class="commodity-card">
-                <div class="commodity-icon">🌾</div>
-                <h3>Bituminous Coking Coal</h3>
-                <p>Premium metallurgical coal essential for steel production. Low ash, high fluidity, and excellent coking properties for blast furnace coke formation.</p>
+                <h3>Coking Coal</h3>
+                <p>Premium metallurgical coal for steel production. Low ash content with excellent coking properties for blast furnace operations.</p>
                 <div class="specs">
                     <span>GCR: 7500+ kcal/kg</span>
                     <span>Ash: <8%</span>
@@ -72,63 +46,13 @@
             </div>
 
             <div class="commodity-card">
-                <div class="commodity-icon">🟤</div>
-                <h3>Anthracite</h3>
-                <p>Highest-rank coal with superior carbon content and minimal volatility. Ideal for residential heating, water filtration, and specialized metallurgical applications.</p>
+                <h3>Sub-bituminous Coal</h3>
+                <p>Medium-rank thermal coal ideal for utility-scale electricity. Low emissions and cost-effective energy output.</p>
                 <div class="specs">
-                    <span>GAR: 7600-7900 kcal/kg</span>
-                    <span>Fixed Carbon: 86-97%</span>
-                    <span>Ash: 8-12%</span>
-                    <span>Sulfur: 0.5-1.5%</span>
+                    <span>GAR: 4200-5500 kcal/kg</span>
+                    <span>Total Moisture: 18-38%</span>
+                    <span>Ash: 3-10%</span>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Trust Badges Section -->
-<section class="trust-badges">
-    <div class="container">
-        <div class="section-title">
-            <h2>Trusted by Industry Leaders</h2>
-            <p>Certified, compliant, and committed to excellence</p>
-        </div>
-
-        <div class="badges-grid">
-            <div class="badge-card">
-                <div class="badge-icon">🏆</div>
-                <h4>Minerals Council</h4>
-                <p>Proud member of Minerals Council of Australia</p>
-            </div>
-
-            <div class="badge-card">
-                <div class="badge-icon">✓</div>
-                <h4>ISO 9001:2015</h4>
-                <p>Certified Quality Management System</p>
-            </div>
-
-            <div class="badge-card">
-                <div class="badge-icon">🌍</div>
-                <h4>ISO 14001</h4>
-                <p>Environmental Management Certified</p>
-            </div>
-
-            <div class="badge-card">
-                <div class="badge-icon">📜</div>
-                <h4>Export License</h4>
-                <p>Australian Government Licensed Exporter</p>
-            </div>
-
-            <div class="badge-card">
-                <div class="badge-icon">🤝</div>
-                <h4>GrainGrowers</h4>
-                <p>Grain Growers Association Member</p>
-            </div>
-
-            <div class="badge-card">
-                <div class="badge-icon">⚖️</div>
-                <h4>SGS Certified</h4>
-                <p>Independent Quality Verification</p>
             </div>
         </div>
     </div>
@@ -138,41 +62,28 @@
 <section class="global-reach" id="reach">
     <div class="container">
         <div class="section-title">
-            <h2>Global Reach, Local Excellence</h2>
-            <p>Serving markets across Asia, Europe, and beyond</p>
+            <h2>Global Reach</h2>
+            <div class="line"></div>
         </div>
 
-        <div class="map-container">
-            <div class="map-stats">
-                <div class="stat-card">
-                    <div class="number">25+</div>
-                    <div class="label">Countries Served</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">5M+</div>
-                    <div class="label">Tonnes Exported</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">15+</div>
-                    <div class="label">Years Experience</div>
-                </div>
-                <div class="stat-card">
-                    <div class="number">99%</div>
-                    <div class="label">On-Time Delivery</div>
-                </div>
+        <div class="reach-content">
+            <div class="stat-item">
+                <div class="number">Asia</div>
+                <div class="label">Primary Market</div>
             </div>
-
-            <div class="destinations">
-                <span class="destination-tag">🇨🇳 China</span>
-                <span class="destination-tag">🇯🇵 Japan</span>
-                <span class="destination-tag">🇰🇷 South Korea</span>
-                <span class="destination-tag">🇮🇳 India</span>
-                <span class="destination-tag">🇹🇼 Taiwan</span>
-                <span class="destination-tag">🇻🇳 Vietnam</span>
-                <span class="destination-tag">🇩🇪 Germany</span>
-                <span class="destination-tag">🇮🇹 Italy</span>
-                <span class="destination-tag">🇬🇧 United Kingdom</span>
-                <span class="destination-tag">🇧🇷 Brazil</span>
+            <div class="stat-item">
+                <div class="number">China</div>
+                <div class="label">Japan</div>
+                <div class="label">South Korea</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">India</div>
+                <div class="label">Taiwan</div>
+                <div class="label">Vietnam</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">Europe</div>
+                <div class="label">Growing Partner</div>
             </div>
         </div>
     </div>
