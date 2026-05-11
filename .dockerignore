@@ -49,3 +49,19 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Render
+render.yaml
+
+# Documentation
+README.md
+*.md

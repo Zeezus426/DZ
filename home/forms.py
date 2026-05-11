@@ -46,11 +46,9 @@ class ContactForm(forms.Form):
     subject = forms.ChoiceField(
         choices=[
             ('general', 'General Inquiry'),
-            ('sales', 'Sales - Hard Coking Coal'),
-            ('sales_iron', 'Sales - Iron Ore'),
-            ('sales_thermal', 'Sales - Thermal Coal'),
-            ('sales_wheat', 'Sales - Wheat'),
-            ('partnership', 'Partnership Opportunity'),
+            ('sales_coal', 'Sales - Coal'),
+            ('sales_iron', 'Sales - Iron'),
+            ('sales', 'Domestic Inquiries'),
             ('other', 'Other'),
         ],
         widget=forms.Select(attrs={

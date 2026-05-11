@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: dz-commodities
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn core.wsgi:application
+    envVars:
+      - key: DJANGO_ENV
+        value: production
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: dz-db
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: dz-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: dz-db
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: dz-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: dz-db
+          property: port
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+
+databases:
+  - name: dz-db
+    databaseName: dz_commodities
+    user: dz_user
