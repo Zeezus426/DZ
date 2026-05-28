@@ -31,8 +31,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - static_volume:/app/staticfiles
     networks:
       - dz-network
     healthcheck:
@@ -77,7 +75,6 @@ services:
 
 volumes:
   postgres_data:
-  static_volume:
   # redis_data:
 
 networks:
