@@ -18,9 +18,9 @@ RUN apt-get update && \
 # Set work directory
 WORKDIR /app
 
-# Install Python dependencies
+# Install Python dependencies to system site-packages
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Production stage
 FROM python:3.13
@@ -39,17 +39,15 @@ RUN apt-get update && \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash appuser
-
-# Copy Python packages from builder
-COPY --from=builder /root/.local /home/appuser/.local
-
-# Make sure scripts in .local are usable
-ENV PATH=/home/appuser/.local/bin:$PATH
-
 # Set work directory
 WORKDIR /app
+
+# Copy Python packages from builder (from system site-packages)
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash appuser
 
 # Copy project files
 COPY --chown=appuser:appuser . .
