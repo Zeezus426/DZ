@@ -47,7 +47,8 @@ Variables -> Bulk Edit**, and paste the contents of `.env.production`
 - **Persistent directories** (App Configs -> Persistent Directories):
   - `/app/media`
   - `/app/logs`
-- **HTTP Settings**: connect `otec-au.com` and `www.otec-au.com`, enable HTTPS,
+- **HTTP Settings**: connect `otec.ltd` and `www.otec.ltd` (plus `otec-au.com`
+  and `www.otec-au.com` while that domain is still in use), enable HTTPS on each,
   and turn on **Force HTTPS**.
 - Every hostname CapRover serves must also appear in `ALLOWED_HOSTS`.
 
@@ -106,7 +107,7 @@ Update `.env`:
 DJANGO_SETTINGS_ENV=prod
 SECRET_KEY=generate-strong-random-secret-key
 DEBUG=False
-ALLOWED_HOSTS=otec-au.com,www.otec-au.com
+ALLOWED_HOSTS=otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com
 RATELIMIT_ENABLE=False
 DB_NAME=postgres
 DB_USER=postgres
@@ -176,7 +177,7 @@ Update `.env`:
 DJANGO_SETTINGS_ENV=prod
 SECRET_KEY=generate-strong-random-secret-key
 DEBUG=False
-ALLOWED_HOSTS=otec-au.com,www.otec-au.com
+ALLOWED_HOSTS=otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com
 RATELIMIT_ENABLE=False
 DB_NAME=postgres
 DB_USER=postgres
