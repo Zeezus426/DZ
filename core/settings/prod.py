@@ -1,14 +1,22 @@
-"""Production settings for DZ Commodities project."""
+"""Production settings for the OTEC project."""
 
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com',
-).split(',')
+# Hosts are stripped and empties dropped: the value is hand-edited in the
+# CapRover dashboard, where "a.com, b.com" is the natural way to type a list.
+# Django compares Host against these verbatim, so a stray space would reject
+# the domain with a 400 that looks identical to the host being absent.
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in config(
+        'ALLOWED_HOSTS',
+        default='otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com',
+    ).split(',')
+    if host.strip()
+]
 
 # CSRF trusted origins are derived from ALLOWED_HOSTS — Django requires the
 # scheme here, so bare hostnames are promoted to https:// and duplicates
