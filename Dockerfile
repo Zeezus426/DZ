@@ -18,9 +18,10 @@ RUN apt-get update && \
 # Set work directory
 WORKDIR /app
 
-# Install Python dependencies to system site-packages
+# Install Python dependencies to system site-packages (uv for fast installs)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir uv && \
+    uv pip install --system --no-cache -r requirements.txt
 
 # Stage 2: Production stage
 FROM python:3.13
