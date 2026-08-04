@@ -5,7 +5,10 @@ from .base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='otec-au.com').split(',')
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com',
+).split(',')
 
 # CSRF trusted origins are derived from ALLOWED_HOSTS — Django requires the
 # scheme here, so bare hostnames are promoted to https:// and duplicates
