@@ -31,7 +31,10 @@
 .hero h1 {
     font-family: var(--f-display);
     font-weight: 700;
-    font-size: clamp(3rem, 12vw, 9rem);
+    /* Floor is deliberately low: "COMMODITY" is the longest word in the
+       headline, and a fixed 3rem floor made it wider than a 280-320px
+       screen's content box. */
+    font-size: clamp(2.25rem, 12vw, 9rem);
     line-height: .86;
     letter-spacing: -.035em;
     text-transform: uppercase;
@@ -225,9 +228,12 @@
     display: block;
 }
 
+/* min() lets the track collapse below its preferred 320px on very narrow
+   screens (320px phones); a bare minmax(320px,1fr) would force the grid
+   wider than the viewport and cause a horizontal scroll. */
 .grades__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
     gap: 1.5rem;
 }
 
@@ -341,7 +347,7 @@
    ========================================================================= */
 .reach__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
     gap: 1px;
     background: var(--iron);
     border: 1px solid var(--iron);
@@ -477,7 +483,7 @@
     <div class="container">
         <div class="band__head">
             <span class="tag">&#9670; Product Index</span>
-            <h2>What we<br>export</h2>
+            <h2>What we <br>export</h2>
             <p>Two commodity lines out of Australia. Where figures are published below they are the contracted specification range &mdash; bars show that range against a fixed scale, not a single point.</p>
         </div>
 
@@ -496,7 +502,7 @@
                 <div class="frame__in grade" data-reveal>
                     <div class="grade__top">
                         <span class="grade__rank">0<b>1</b></span>
-                        <span class="grade__name">Sub-bituminous<br>Coal</span>
+                        <span class="grade__name">Sub-bituminous <br>Coal</span>
                     </div>
                     <div class="grade__body">
                         <p>Medium-rank thermal coal ideal for utility-scale electricity. Low emissions and cost-effective energy output.</p>
@@ -529,7 +535,7 @@
                 <div class="frame__in grade" data-reveal>
                     <div class="grade__top">
                         <span class="grade__rank">0<b>2</b></span>
-                        <span class="grade__name">Thermal<br>Coal</span>
+                        <span class="grade__name">Thermal <br>Coal</span>
                     </div>
                     <div class="grade__body">
                         <p>High-quality thermal coal for power generation. Consistent calorific value and low sulfur content for efficient energy production.</p>
@@ -562,7 +568,7 @@
                 <div class="frame__in grade" data-reveal>
                     <div class="grade__top">
                         <span class="grade__rank">0<b>3</b></span>
-                        <span class="grade__name">Coking<br>Coal</span>
+                        <span class="grade__name">Coking <br>Coal</span>
                     </div>
                     <div class="grade__body">
                         <p>Premium metallurgical coal for steel production. Low ash content with excellent coking properties for blast furnace operations.</p>
@@ -642,7 +648,7 @@
             </div>
             <div class="dest">
                 <div class="dest__code">KR</div>
-                <div class="dest__name">South<br>Korea</div>
+                <div class="dest__name">South <br>Korea</div>
                 <div class="dest__from">Ex Australia</div>
             </div>
             <div class="dest">
@@ -659,7 +665,7 @@
     <div class="container">
         <div class="frame frame--acid">
             <div class="frame__in close__panel">
-                <h2>Request a<br>specification sheet</h2>
+                <h2>Request a <br>specification sheet</h2>
                 <p>Tell us the grade and tonnage you need. We reply with available specifications and delivery terms.</p>
                 <button class="btn btn-primary contact-trigger">Open Enquiry</button>
             </div>
