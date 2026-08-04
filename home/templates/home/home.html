@@ -1,6 +1,6 @@
 {% extends "home/base.html" %}
 
-{% block title %}OTEC | Premium Australian Coal Exporter{% endblock %}
+{% block title %}OTEC | Premium Australian Commodity Exporter{% endblock %}
 
 {% block extra_css %}
 /* =========================================================================
@@ -154,9 +154,77 @@
 }
 
 /* =========================================================================
-   GRADES — coal ranks as inventory readouts. Ordered by ascending
-   calorific value, so 01/02/03 encodes the actual energy ladder.
+   COMMODITIES — one block per division. Coal carries three graded ranks;
+   iron ore is listed without figures until specifications are supplied.
    ========================================================================= */
+.division + .division { margin-top: 4.5rem; }
+
+.division__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--iron);
+}
+
+.division__n {
+    font-family: var(--f-mono);
+    font-size: .74rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--acid);
+}
+
+.division__name {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+    line-height: 1;
+    letter-spacing: -.015em;
+    text-transform: uppercase;
+}
+
+.division__note {
+    font-family: var(--f-mono);
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-left: auto;
+}
+
+/* Iron ore: a real line with no published figures yet. Presented as a
+   deliberate "on request" panel rather than an empty card. */
+.pending {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.75rem 2.5rem;
+    align-items: center;
+    padding: 2.4rem 2rem;
+}
+
+.pending h4 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+.pending p { color: var(--ash); font-size: .97rem; margin-top: .5rem; max-width: 58ch; }
+
+.pending__req {
+    font-family: var(--f-mono);
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-top: .9rem;
+    display: block;
+}
+
 .grades__grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -333,6 +401,8 @@
 .close__panel p { color: var(--ash); max-width: 46ch; margin: 1.1rem auto 2rem; }
 
 @media (max-width: 760px) {
+    .pending { grid-template-columns: 1fr; padding: 1.9rem 1.5rem; }
+    .division__note { margin-left: 0; width: 100%; }
     .hero { padding-top: calc(var(--nav-h) + 56px); }
     .hero__stats { grid-template-columns: 1fr; margin-top: 3.5rem; }
     .ticker { margin-top: 3.5rem; }
@@ -352,27 +422,27 @@
         <h1>
             <span class="l">Premium</span>
             <span class="l">Australian</span>
-            <span class="l"><span class="hero__mark" data-text="Coal">Coal</span></span>
+            <span class="l"><span class="hero__mark" data-text="Commodity">Commodity</span></span>
             <span class="l">Exporter</span>
         </h1>
 
         <p class="hero__lead">Connecting Australian resources with global markets. Reliable sourcing, quality assurance, and dependable delivery.</p>
 
         <div class="hero__cta">
-            <a href="#grades" class="btn btn-primary">View Grades</a>
+            <a href="#commodities" class="btn btn-primary">View Commodities</a>
             <button class="btn btn-secondary contact-trigger">Open Enquiry</button>
         </div>
 
         <div class="hero__stats">
             <div class="frame">
                 <div class="frame__in stat">
-                    <div class="stat__k">Peak calorific value</div>
-                    <div class="stat__v">7,500<em>+</em> <span style="font-size:.5em;">kcal/kg</span></div>
+                    <div class="stat__k">Commodity lines</div>
+                    <div class="stat__v">Coal <em>&amp;</em> iron ore</div>
                 </div>
             </div>
             <div class="frame">
                 <div class="frame__in stat">
-                    <div class="stat__k">Grades supplied</div>
+                    <div class="stat__k">Coal grades</div>
                     <div class="stat__v">Three<em>.</em></div>
                 </div>
             </div>
@@ -391,23 +461,33 @@
             <span><b>Sub-bituminous</b> &middot; GAR 4,200&ndash;5,500 kcal/kg</span>
             <span><b>Thermal</b> &middot; GAR 5,500&ndash;7,000 kcal/kg</span>
             <span><b>Coking</b> &middot; GCR 7,500+ kcal/kg &middot; CSR &gt;60%</span>
+            <span><b>Iron ore</b> &middot; specifications on request</span>
             <span><i>Markets</i> &middot; CN &middot; IN &middot; KR &middot; ID</span>
             <span><b>Sub-bituminous</b> &middot; GAR 4,200&ndash;5,500 kcal/kg</span>
             <span><b>Thermal</b> &middot; GAR 5,500&ndash;7,000 kcal/kg</span>
             <span><b>Coking</b> &middot; GCR 7,500+ kcal/kg &middot; CSR &gt;60%</span>
+            <span><b>Iron ore</b> &middot; specifications on request</span>
             <span><i>Markets</i> &middot; CN &middot; IN &middot; KR &middot; ID</span>
         </div>
     </div>
 </section>
 
 <!-- ===================== GRADES ===================== -->
-<section class="band band--pit" id="grades">
+<section class="band band--pit" id="commodities">
     <div class="container">
         <div class="band__head">
             <span class="tag">&#9670; Product Index</span>
-            <h2>Graded by<br>carbon content</h2>
-            <p>Three ranks, ordered by calorific value. Every figure below is the contracted specification range &mdash; bars show that range against a fixed scale, not a single point.</p>
+            <h2>What we<br>export</h2>
+            <p>Two commodity lines out of Australia. Where figures are published below they are the contracted specification range &mdash; bars show that range against a fixed scale, not a single point.</p>
         </div>
+
+        <!-- Division 01 — coal, three graded ranks -->
+        <div class="division">
+            <div class="division__head">
+                <span class="division__n">Division 01</span>
+                <h3 class="division__name">Coal</h3>
+                <span class="division__note">Graded by carbon content</span>
+            </div>
 
         <div class="grades__grid">
 
@@ -516,6 +596,28 @@
             </div>
 
         </div>
+        </div><!-- /division 01 -->
+
+        <!-- Division 02 — iron ore. No figures published until specifications
+             are confirmed; the panel asks rather than estimates. -->
+        <div class="division">
+            <div class="division__head">
+                <span class="division__n">Division 02</span>
+                <h3 class="division__name">Iron Ore</h3>
+                <span class="division__note">Specifications on request</span>
+            </div>
+
+            <div class="frame">
+                <div class="frame__in pending">
+                    <div>
+                        <h4>Steelmaking feed</h4>
+                        <p>Iron ore supplied into the same markets as our coal grades, with tonnage and specification confirmed per contract.</p>
+                        <span class="pending__req">Fe content, silica, alumina and moisture quoted on enquiry</span>
+                    </div>
+                    <button class="btn btn-secondary contact-trigger">Request specs</button>
+                </div>
+            </div>
+        </div><!-- /division 02 -->
     </div>
 </section>
 
