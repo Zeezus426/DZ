@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django_ratelimit.decorators import ratelimit
 from .forms import ContactForm
 
 
@@ -23,16 +24,24 @@ def home(request):
 
 
 @csrf_exempt
+@ratelimit(key='ip', rate='5/h', method='POST', block=False)
 def contact_submit(request):
     """
     Handle contact form submissions via AJAX.
     Validates the form and sends emails using django.core.mail.send_mail.
+    Rate limited per IP; controlled by the RATELIMIT_ENABLE setting.
     """
     if request.method != 'POST':
         return JsonResponse({
             'success': False,
             'error': 'Invalid request method'
         }, status=405)
+
+    if getattr(request, 'limited', False):
+        return JsonResponse({
+            'success': False,
+            'error': 'Too many submissions. Please try again later.'
+        }, status=429)
 
     form = ContactForm(request.POST)
 

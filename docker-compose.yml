@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Django Application
   app:
@@ -11,23 +9,28 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_ENV=production
+      - DJANGO_SETTINGS_ENV=prod
       - DJANGO_SETTINGS_MODULE=core.settings
-      - POSTGRES_DB=${POSTGRES_DB:-mydatabase}
-      - POSTGRES_USER=${POSTGRES_USER:-myuser}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-mypassword}
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=False
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
-      - EMAIL_HOST=${EMAIL_HOST:-smtp.mailgun.org}
-      - EMAIL_PORT=${EMAIL_PORT:-587}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-info@austradecommodities.com}
-      - CONTACT_EMAIL=${CONTACT_EMAIL:-info@austradecommodities.com}
+      - RATELIMIT_ENABLE=${RATELIMIT_ENABLE:-False}
+      - DB_NAME=${DB_NAME:-dz}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - BREVO_SMTP=${BREVO_SMTP:-smtp-relay.brevo.com}
+      - BREVO_PORT=${BREVO_PORT:-587}
+      - BREVO_LOGIN=${BREVO_LOGIN}
+      - BREVO_PASSWORD=${BREVO_PASSWORD}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-info@otec-au.com}
+      - CONTACT_EMAIL=${CONTACT_EMAIL:-info@otec-au.com}
     env_file:
       - .env
+    volumes:
+      - media_data:/app/media
+      - logs_data:/app/logs
     depends_on:
       db:
         condition: service_healthy
@@ -46,17 +49,15 @@ services:
     container_name: dz-db
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-mydatabase}
-      - POSTGRES_USER=${POSTGRES_USER:-myuser}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-mypassword}
-    env_file:
-      - .env
+      - POSTGRES_DB=${DB_NAME:-dz}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - dz-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-myuser} -d ${POSTGRES_DB:-mydatabase}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-dz}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -75,6 +76,8 @@ services:
 
 volumes:
   postgres_data:
+  media_data:
+  logs_data:
   # redis_data:
 
 networks:

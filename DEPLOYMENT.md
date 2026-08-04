@@ -1,8 +1,11 @@
-# AWS EC2 Deployment Guide (Gunicorn Direct)
+# Deployment Guide
 
-This guide will help you deploy the DZ Commodities Django application to AWS EC2 using Docker Compose with direct Gunicorn access (no Nginx).
+Deployment options for the DZ Commodities Django application. **CapRover is the
+current production target** — see that section below. The AWS EC2 sections
+remain as an alternative using Docker Compose with direct Gunicorn access
+(no Nginx).
 
-## Prerequisites
+## Prerequisites (AWS EC2 route only)
 
 1. AWS EC2 instance (Ubuntu 22.04 LTS recommended)
 2. Domain name with DNS configured to point to EC2 public IP
@@ -20,6 +23,44 @@ This guide will help you deploy the DZ Commodities Django application to AWS EC2
 - No extra AWS cost
 - Requires manual setup
 - Good for smaller deployments
+
+---
+
+## Deployment to CapRover (current target)
+
+The app ships as a single Dockerfile and is deployed by CapRover from
+`captain-definition`. Static files are collected at build time and the
+container runs `manage.py migrate --noinput` before starting Gunicorn, so a
+deploy needs no manual migration step.
+
+### 1. Set environment variables
+
+In the CapRover dashboard: **Apps -> <app> -> App Configs -> Environmental
+Variables -> Bulk Edit**, and paste the contents of `.env.production`
+(gitignored reference copy kept in this repo).
+
+`DB_HOST` must be `srv-captain--<name-of-your-caprover-postgres-app>`.
+
+### 2. Configure the app
+
+- **Container HTTP Port**: `8000`
+- **Persistent directories** (App Configs -> Persistent Directories):
+  - `/app/media`
+  - `/app/logs`
+- **HTTP Settings**: connect `otec-au.com` and `www.otec-au.com`, enable HTTPS,
+  and turn on **Force HTTPS**.
+- Every hostname CapRover serves must also appear in `ALLOWED_HOSTS`.
+
+### 3. Deploy
+
+```bash
+caprover deploy
+# or: push to the connected branch if you use CapRover's git integration
+```
+
+`prod.py` sets `SECURE_PROXY_SSL_HEADER`, so Django trusts CapRover's
+`X-Forwarded-Proto` header and the `SECURE_SSL_REDIRECT` loop resolves
+correctly behind the proxy.
 
 ---
 
@@ -62,13 +103,22 @@ nano .env
 
 Update `.env`:
 ```
-DJANGO_ENV=production
-DJANGO_SECRET_KEY=generate-strong-random-secret-key
-ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
-POSTGRES_PASSWORD=strong-postgres-password
-EMAIL_HOST=smtp.mailgun.org
-EMAIL_HOST_USER=your-mailgun-username
-EMAIL_HOST_PASSWORD=your-mailgun-password
+DJANGO_SETTINGS_ENV=prod
+SECRET_KEY=generate-strong-random-secret-key
+DEBUG=False
+ALLOWED_HOSTS=otec-au.com,www.otec-au.com
+RATELIMIT_ENABLE=False
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=strong-postgres-password
+DB_HOST=db
+DB_PORT=5432
+BREVO_SMTP=smtp-relay.brevo.com
+BREVO_PORT=587
+BREVO_LOGIN=your-brevo-smtp-login
+BREVO_PASSWORD=your-brevo-smtp-password
+DEFAULT_FROM_EMAIL=info@otec-au.com
+CONTACT_EMAIL=info@otec-au.com
 ```
 
 ```bash
@@ -123,13 +173,22 @@ nano .env
 
 Update `.env`:
 ```
-DJANGO_ENV=production
-DJANGO_SECRET_KEY=generate-strong-random-secret-key
-ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
-POSTGRES_PASSWORD=strong-postgres-password
-EMAIL_HOST=smtp.mailgun.org
-EMAIL_HOST_USER=your-mailgun-username
-EMAIL_HOST_PASSWORD=your-mailgun-password
+DJANGO_SETTINGS_ENV=prod
+SECRET_KEY=generate-strong-random-secret-key
+DEBUG=False
+ALLOWED_HOSTS=otec-au.com,www.otec-au.com
+RATELIMIT_ENABLE=False
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=strong-postgres-password
+DB_HOST=db
+DB_PORT=5432
+BREVO_SMTP=smtp-relay.brevo.com
+BREVO_PORT=587
+BREVO_LOGIN=your-brevo-smtp-login
+BREVO_PASSWORD=your-brevo-smtp-password
+DEFAULT_FROM_EMAIL=info@otec-au.com
+CONTACT_EMAIL=info@otec-au.com
 ```
 
 ### 3. Setup SSL with Caddy (Simpler than Certbot + Nginx)
@@ -199,10 +258,10 @@ git pull
 docker-compose up -d --build
 
 # Backup database
-docker-compose exec db pg_dump -U myuser mydatabase > backup.sql
+docker-compose exec db pg_dump -U "$DB_USER" "$DB_NAME" > backup.sql
 
 # Restore database
-docker-compose exec -T db psql -U myuser mydatabase < backup.sql
+docker-compose exec -T db psql -U "$DB_USER" "$DB_NAME" < backup.sql
 
 # Run migrations
 docker-compose exec app python manage.py migrate
@@ -229,7 +288,7 @@ docker-compose up -d --build
 docker-compose exec app python manage.py shell
 
 # Access PostgreSQL
-docker-compose exec db psql -U myuser -d mydatabase
+docker-compose exec db psql -U "$DB_USER" -d "$DB_NAME"
 ```
 
 ## Security Notes

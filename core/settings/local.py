@@ -1,33 +1,34 @@
-"""
-Local development settings.
-"""
+"""Local development settings for DZ Commodities project."""
 
 from .base import *
 
 DEBUG = True
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'otec-django.caprover.iqed.com.au']
 
-ALLOWED_HOSTS = ['*']
-
-# Database - PostgreSQL for local development
-from decouple import config
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB', default='mydatabase'),
-        'USER': config('POSTGRES_USER', default='myuser'),
-        'PASSWORD': config('POSTGRES_PASSWORD', default='mypassword'),
-        'HOST': config('POSTGRES_HOST', default='localhost'),
-        'PORT': config('POSTGRES_PORT', default='5433'),
-    }
-}
-
-# Use console backend for local development
+# Print emails to the console instead of sending them. Swap to the SMTP backend
+# below when you need to test real Brevo delivery from your machine.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# Disable security features for local development
+# Security settings for development
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
-SECURE_SSL_REDIRECT = False
-SECURE_HSTS_SECONDS = 0
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False
-SECURE_HSTS_PRELOAD = False
+
+# Debug toolbar for development (optional)
+DEBUG_TOOLBAR_ENABLED = False
+try:
+    import debug_toolbar
+    DEBUG_TOOLBAR_ENABLED = True
+    INSTALLED_APPS += ['debug_toolbar',]
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+    INTERNAL_IPS = ['127.0.0.1', '::1']
+except ImportError:
+    pass
+
+# Allow all hosts for development
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Disable rate limiting in development (set to True if you want to test it)
+RATELIMIT_ENABLE = False
+
+print("WARNING: Running in DEBUG mode with development settings.")
