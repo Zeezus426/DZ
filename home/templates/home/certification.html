@@ -1,197 +1,156 @@
 {% extends "home/base.html" %}
 
-{% block title %}Certification | DZ Commodities{% endblock %}
+{% block title %}Certification | OTEC{% endblock %}
 
 {% block extra_css %}
-.page-header {
-    background: var(--primary-dark);
-    padding: 100px 2rem 60px;
-    text-align: center;
-}
+.certs { border-top: 1px solid var(--iron); }
 
-.page-header h1 {
-    font-size: 2.5rem;
-    color: var(--white);
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    margin-bottom: 0.5rem;
-}
-
-.page-header p {
-    color: rgba(255,255,255,0.7);
-    font-size: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.cert-section {
-    padding: 80px 0;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.cert-grid {
+.cert {
     display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+    padding: 2.2rem 0;
+    border-bottom: 1px solid var(--iron);
+    transition: background .16s linear;
+}
+
+.cert:hover { background: var(--steel); }
+
+.cert__ref {
+    font-family: var(--f-mono);
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--acid);
+}
+
+.cert__h {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    margin-top: .5rem;
+}
+
+.cert p { color: var(--ash); font-size: .97rem; margin-top: .5rem; max-width: 62ch; }
+
+/* Verification stamp — a mark, not a claim of anything beyond the reference */
+.cert__stamp {
+    font-family: var(--f-mono);
+    font-size: .66rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--void);
+    background: var(--acid);
+    padding: .5rem .8rem;
+    clip-path: var(--notch-sm);
+    white-space: nowrap;
+}
+
+/* Registry block ---------------------------------------------------------- */
+.registry { margin-top: 4rem; }
+
+.registry__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    background: var(--iron);
+    border: 1px solid var(--iron);
 }
 
-.cert-item {
-    background: var(--white);
-    padding: 2.5rem;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 2rem;
-    align-items: center;
-}
+.registry__cell { background: var(--void); padding: 1.6rem 1.5rem; }
 
-.cert-item:hover {
-    background: #fafafa;
-}
-
-.cert-number {
-    font-family: 'Inter', monospace;
-    font-size: 0.75rem;
-    color: var(--text-light);
-    letter-spacing: 1px;
+.registry__k {
+    font-family: var(--f-mono);
+    font-size: .66rem;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    grid-column: 2;
-    margin-bottom: 0.25rem;
+    color: var(--ash);
 }
 
-.cert-item h3 {
-    color: var(--primary);
-    font-size: 1.1rem;
+.registry__v {
+    font-family: var(--f-display);
     font-weight: 600;
-    margin: 0;
-    grid-column: 2;
+    font-size: 1.15rem;
+    margin-top: .5rem;
+    line-height: 1.25;
 }
 
-.cert-item p {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin: 0.5rem 0 0 0;
-    grid-column: 2;
-}
-
-.cert-icon {
-    width: 48px;
-    height: 48px;
-    background: var(--bg-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.company-details {
-    margin-top: 60px;
-    padding: 40px;
-    background: var(--primary);
-    color: var(--white);
-}
-
-.company-details h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    letter-spacing: 0.5px;
-}
-
-.details-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 2rem;
-}
-
-.detail-item .label {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.6);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-}
-
-.detail-item .value {
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-@media (max-width: 768px) {
-    .cert-item {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .cert-number, .cert-item h3, .cert-item p {
-        grid-column: 1;
-    }
-
-    .cert-icon {
-        margin: 0 auto;
-    }
+@media (max-width: 760px) {
+    .cert { grid-template-columns: 1fr; }
+    .cert__stamp { justify-self: start; }
 }
 {% endblock %}
 
 {% block content %}
-<header class="page-header">
-    <h1>Certification</h1>
-    <p>Committed to quality, compliance, and responsible business practices</p>
+
+<header class="page-head">
+    <div class="container">
+        <span class="tag">&#9670; Compliance Record</span>
+        <h1>Certification</h1>
+        <p>Committed to quality, compliance, and responsible business practices.</p>
+    </div>
 </header>
 
-<section class="cert-section">
-    <div class="cert-grid">
-        <div class="cert-item">
-            <div class="cert-icon">✓</div>
-            <div>
-                <span class="cert-number">ISO 9001:2015</span>
-                <h3>Quality Management System</h3>
-                <p>Certified quality management ensuring consistent products and services that meet customer and regulatory requirements.</p>
+<section class="band">
+    <div class="container">
+        <div class="certs">
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">ISO 9001:2015</span>
+                    <h3 class="cert__h">Quality Management System</h3>
+                    <p>Certified quality management ensuring consistent products and services that meet customer and regulatory requirements.</p>
+                </div>
+                <span class="cert__stamp">Certified</span>
+            </div>
+
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">ISO 14001</span>
+                    <h3 class="cert__h">Environmental Management</h3>
+                    <p>Environmental management system demonstrating commitment to minimizing environmental impact.</p>
+                </div>
+                <span class="cert__stamp">Certified</span>
+            </div>
+
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">DFAT Export Licence</span>
+                    <h3 class="cert__h">Export Authorization</h3>
+                    <p>Authorized by the Australian Government Department of Foreign Affairs and Trade to export commodities internationally.</p>
+                </div>
+                <span class="cert__stamp">Authorized</span>
             </div>
         </div>
 
-        <div class="cert-item">
-            <div class="cert-icon">🌍</div>
-            <div>
-                <span class="cert-number">ISO 14001</span>
-                <h3>Environmental Management</h3>
-                <p>Environmental management system demonstrating commitment to minimizing environmental impact.</p>
+        <div class="registry">
+            <div class="band__head" style="margin-bottom:1.5rem;">
+                <span class="tag tag--cyan">&#9670; Registry</span>
+                <h2 style="font-size:clamp(1.6rem,3.5vw,2.2rem);">Company information</h2>
             </div>
-        </div>
 
-        <div class="cert-item">
-            <div class="cert-icon">📜</div>
-            <div>
-                <span class="cert-number">DFAT Export License</span>
-                <h3>Export Authorization</h3>
-                <p>Authorized by the Australian Government Department of Foreign Affairs and Trade to export commodities internationally.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="company-details">
-        <h3>Company Information</h3>
-        <div class="details-grid">
-            <div class="detail-item">
-                <div class="label">Company Name</div>
-                <div class="value">DZ Commodities Pty Ltd</div>
-            </div>
-            <div class="detail-item">
-                <div class="label">ABN</div>
-                <div class="value">38 64600 4674</div>
-            </div>
-            <div class="detail-item">
-                <div class="label">Established</div>
-                <div class="value">2026</div>
-            </div>
-            <div class="detail-item">
-                <div class="label">Location</div>
-                <div class="value">Sydney, Australia</div>
+            <div class="registry__grid">
+                <div class="registry__cell">
+                    <div class="registry__k">Company name</div>
+                    <div class="registry__v">Ocean Technology and Energy Corporation Pty Ltd</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">ABN</div>
+                    <div class="registry__v">38 64600 4674</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">Established</div>
+                    <div class="registry__v">2026</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">Location</div>
+                    <div class="registry__v">Sydney, Australia</div>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
 {% endblock %}

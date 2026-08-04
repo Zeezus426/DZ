@@ -1,11 +1,21 @@
-<nav>
-    <div class="logo">
-        <span>⬡</span> DZ Commodities
-    </div>
-    <ul>
+<nav class="nav">
+    <a class="nav__brand" href="{% url 'home' %}">
+        <span class="nav__mark">OTEC</span>
+        <span class="nav__expand">Ocean Technology<br>&amp; Energy Corp</span>
+    </a>
+
+    <button class="nav__toggle" id="nav-toggle" aria-controls="nav-links" aria-expanded="false">Menu</button>
+
+    <ul class="nav__links" id="nav-links">
         <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'home' %}#grades">Grades</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
 <!--        <li><a href="{% url 'certification' %}">Certification</a></li>-->
         <li><a href="#contact" class="contact-trigger">Contact</a></li>
     </ul>
+
+    <div class="nav__loc">
+        <span class="nav__dot" aria-hidden="true"></span>
+        <span>SYD &middot; AU</span>
+    </div>
 </nav>

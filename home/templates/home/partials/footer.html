@@ -1,29 +1,47 @@
-<footer id="contact">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h4>AusTrade Commodities</h4>
-            <p>Your trusted partner in premium Australian commodity exports. Quality, reliability, and sustainability in every shipment.</p>
+<div class="hazard" aria-hidden="true"></div>
+
+<footer class="foot" id="contact">
+    <div class="container">
+        <div class="foot__grid">
+            <div>
+                <h4>// Ocean Technology &amp; Energy Corp</h4>
+                <p>Australian resource export. Reliable sourcing, verified specifications, and dependable delivery into Asian markets.</p>
+            </div>
+
+            <div>
+                <h4>// Index</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'home' %}#grades">Grades</a></li>
+                    <li><a href="{% url 'home' %}#reach">Markets</a></li>
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><button class="foot__btn contact-trigger">Contact</button></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>// Channel</h4>
+                <ul>
+                    <li>
+                        <span class="foot__k">Office</span>
+                        Sydney, Australia
+                    </li>
+                    <li>
+                        <span class="foot__k">Voice</span>
+                        <a href="tel:+61424854899">+61 4 2485 4899</a>
+                    </li>
+                    <li>
+                        <span class="foot__k">Mail</span>
+                        <a href="mailto:info@otec.ltd">info@otec.ltd</a>
+                    </li>
+                </ul>
+                <button class="btn btn-primary contact-trigger" style="margin-top:1.25rem;">Open Enquiry</button>
+            </div>
         </div>
-        <div class="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="#commodities">Commodities</a></li>
-                <li><a href="#reach">Global Reach</a></li>
-                <li><button id="footer-contact-btn" class="footer-contact-btn">Contact Us</button></li>
-            </ul>
+
+        <div class="foot__base">
+            <span>&copy; 2026 Ocean Technology and Energy Corporation</span>
+            <span>Sydney &middot; AU &nbsp;//&nbsp; All rights reserved</span>
         </div>
-        <div class="footer-section">
-            <h4>Contact Us</h4>
-            <ul>
-                <li>📍 Sydney, Australia</li>
-                <li>📞 +61 4 2485 4899</li>
-                <li>✉️ info<a href="http://austradecommodities.com">@austradecommodities.com</a></li>
-            </ul>
-            <button id="footer-contact-form-btn" class="btn btn-primary">Send Us a Message</button>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2026 AusTrade Commodities. All rights reserved.</p>
     </div>
 </footer>

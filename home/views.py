@@ -9,14 +9,14 @@ from .forms import ContactForm
 
 def home(request):
     """
-    Home page view for AusTrade Commodities.
+    Home page view for OTEC.
     Renders the main landing page with company information,
     commodities, trust badges, and global reach details.
     """
     contact_form = ContactForm()
 
     context = {
-        'company_name': 'AusTrade Commodities',
+        'company_name': 'Ocean Technology and Energy Corporation',
         'page_title': 'Premium Australian Commodities Exporter',
         'contact_form': contact_form,
     }
@@ -77,14 +77,14 @@ Message:
 {message}
 
 ---
-This email was sent from the AusTrade Commodities website.
+This email was sent from the OTEC website.
 """
 
     # Create email content for the visitor (auto-reply)
     visitor_email_body = f"""
 Dear {name},
 
-Thank you for contacting AusTrade Commodities.
+Thank you for contacting OTEC.
 
 We have received your inquiry regarding "{full_subject}" and our team will review it shortly. We typically respond within 1-2 business days.
 
@@ -92,17 +92,17 @@ Your inquiry details:
 Subject: {full_subject}
 Message: {message}
 
-If you have any urgent matters, please call us at +61 2 8000 0000.
+If you have any urgent matters, please call us at +61 4 2485 4899.
 
 Best regards,
-The AusTrade Commodities Team
+The OTEC Team
 
 ---
-AusTrade Commodities
+Ocean Technology and Energy Corporation
 Premium Australian Hard Coking Coal & Iron Ore Exporter
 Sydney, Australia
-info@austradecommodities.com
-www.austradecommodities.com
+info@otec.ltd
+www.otec.ltd
 """
 
     try:
@@ -117,7 +117,7 @@ www.austradecommodities.com
 
         # Send auto-reply to the visitor
         send_mail(
-            subject='Thank you for contacting AusTrade Commodities',
+            subject='Thank you for contacting OTEC',
             message=visitor_email_body,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],

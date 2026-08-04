@@ -1,4 +1,4 @@
-"""Settings module for DZ Commodities project."""
+"""Settings module for the OTEC project."""
 
 import os
 

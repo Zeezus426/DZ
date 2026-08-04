@@ -1,117 +1,147 @@
 {% extends "home/base.html" %}
 
-{% block title %}About | DZ Commodities{% endblock %}
+{% block title %}About | OTEC{% endblock %}
 
 {% block extra_css %}
-.page-header {
-    background: var(--primary-dark);
-    padding: 100px 2rem 60px;
-    text-align: center;
+.page-head::after {
+    content: '';
+    position: absolute;
+    right: -40px;
+    bottom: -60px;
+    width: 320px;
+    height: 320px;
+    background: repeating-linear-gradient(135deg, var(--iron) 0 2px, transparent 2px 16px);
+    transform: rotate(8deg);
+    pointer-events: none;
 }
 
-.page-header h1 {
-    font-size: 2.5rem;
-    color: var(--white);
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    margin-bottom: 0.5rem;
-}
+.prose { max-width: 62ch; }
 
-.page-header p {
-    color: rgba(255,255,255,0.7);
-    font-size: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
+.prose p { color: var(--ash); margin-bottom: 1.4rem; }
+.prose p:last-child { margin-bottom: 0; }
 
-.about-content {
-    padding: 80px 0;
-    max-width: 800px;
-    margin: 0 auto;
-}
+.prose strong { color: var(--bone); font-weight: 600; }
 
-.about-content h2 {
-    font-size: 1.5rem;
-    color: var(--primary);
-    font-weight: 600;
-    margin-bottom: 1rem;
-    letter-spacing: -0.3px;
-}
+/* Values as a ledger, not cards — each row is a commitment with a key */
+.ledger { border-top: 1px solid var(--iron); margin-top: 1rem; }
 
-.about-content p {
-    color: var(--text-light);
-    font-size: 1rem;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-}
-
-.values-section {
-    margin-top: 60px;
-}
-
-.values-grid {
+.ledger__row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 2rem;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0 2rem;
+    padding: 1.9rem 0;
+    border-bottom: 1px solid var(--iron);
+    align-items: start;
+    transition: background .16s linear;
 }
 
-.value-item {
-    background: var(--white);
-    padding: 2rem;
+.ledger__row:hover { background: var(--steel); }
+
+.ledger__k {
+    font-family: var(--f-mono);
+    font-size: .8rem;
+    letter-spacing: .1em;
+    color: var(--acid);
+    padding-top: .35rem;
 }
 
-.value-item h3 {
-    font-size: 1rem;
-    color: var(--primary);
-    font-weight: 600;
-    margin-bottom: 0.75rem;
+.ledger__h {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
 }
 
-.value-item p {
-    color: var(--text-light);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin: 0;
+.ledger__row p { color: var(--ash); font-size: .97rem; margin-top: .45rem; max-width: 60ch; }
+
+@media (max-width: 760px) {
+    .page-head::after { display: none; }
+    .ledger__row { grid-template-columns: 1fr; gap: .5rem; }
+    .ledger__k { padding-top: 0; }
 }
 {% endblock %}
 
 {% block content %}
-<header class="page-header">
-    <h1>About Us</h1>
-    <p>Connecting Australian resources with the world</p>
+
+<header class="page-head">
+    <div class="container">
+        <span class="tag">&#9670; Corporate Profile</span>
+        <h1>About<br>OTEC</h1>
+        <p>Connecting Australian resources with the world.</p>
+    </div>
 </header>
 
-<section class="about-content">
-    <h2>Our Business</h2>
-    <p>DZ Commodities is an Australian-based commodity trading company specializing in the export of thermal and coking coal. We connect Australian mining operations with international markets across Asia and Europe.</p>
-    <p>Our focus is on reliable sourcing, quality assurance, and building long-term relationships with both suppliers and buyers. We understand the complexities of international commodity trading and provide seamless solutions for our partners.</p>
+<section class="band">
+    <div class="container">
+        <div class="band__head">
+            <span class="tag tag--cyan">&#9670; Our Business</span>
+            <h2>What we do</h2>
+        </div>
 
-    <div class="values-section">
-        <h2>Our Values</h2>
-        <div class="values-grid">
-            <div class="value-item">
-                <h3>Reliability</h3>
-                <p>We deliver on our commitments with consistent supply and transparent communication throughout the trading process.</p>
+        <div class="prose">
+            <p><strong>Ocean Technology and Energy Corporation</strong> is an Australian-based commodity trading company specializing in the export of thermal and coking coal. We connect Australian mining operations with international markets across Asia and Europe.</p>
+            <p>Our focus is on reliable sourcing, quality assurance, and building long-term relationships with both suppliers and buyers. We understand the complexities of international commodity trading and provide seamless solutions for our partners.</p>
+        </div>
+    </div>
+</section>
+
+<div class="hazard" aria-hidden="true"></div>
+
+<section class="band band--pit">
+    <div class="container">
+        <div class="band__head">
+            <span class="tag">&#9670; Operating Principles</span>
+            <h2>What we hold to</h2>
+        </div>
+
+        <div class="ledger">
+            <div class="ledger__row">
+                <span class="ledger__k">01</span>
+                <div>
+                    <h3 class="ledger__h">Reliability</h3>
+                    <p>We deliver on our commitments with consistent supply and transparent communication throughout the trading process.</p>
+                </div>
             </div>
 
-            <div class="value-item">
-                <h3>Quality</h3>
-                <p>We maintain strict quality control standards to ensure all products meet agreed specifications.</p>
+            <div class="ledger__row">
+                <span class="ledger__k">02</span>
+                <div>
+                    <h3 class="ledger__h">Quality</h3>
+                    <p>We maintain strict quality control standards to ensure all products meet agreed specifications.</p>
+                </div>
             </div>
 
-            <div class="value-item">
-                <h3>Integrity</h3>
-                <p>Honest and ethical business practices form the foundation of all our relationships.</p>
+            <div class="ledger__row">
+                <span class="ledger__k">03</span>
+                <div>
+                    <h3 class="ledger__h">Integrity</h3>
+                    <p>Honest and ethical business practices form the foundation of all our relationships.</p>
+                </div>
             </div>
 
-            <div class="value-item">
-                <h3>Partnership</h3>
-                <p>We view our clients as long-term partners and work collaboratively to achieve mutual success.</p>
+            <div class="ledger__row">
+                <span class="ledger__k">04</span>
+                <div>
+                    <h3 class="ledger__h">Partnership</h3>
+                    <p>We view our clients as long-term partners and work collaboratively to achieve mutual success.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<section class="band">
+    <div class="container">
+        <div class="frame frame--acid">
+            <div class="frame__in" style="padding:3rem 2.5rem; text-align:center;">
+                <span class="tag">&#9670; Next Step</span>
+                <h2 style="font-family:var(--f-display); font-weight:700; font-size:clamp(1.7rem,4vw,2.6rem); line-height:1; text-transform:uppercase; letter-spacing:-.02em; margin:.9rem 0 1rem;">Talk to us</h2>
+                <p style="color:var(--ash); max-width:44ch; margin:0 auto 2rem;">Send through the grade and tonnage you're after and we'll come back with specifications and terms.</p>
+                <button class="btn btn-primary contact-trigger">Open Enquiry</button>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

@@ -1,4 +1,4 @@
-"""Local development settings for DZ Commodities project."""
+"""Local development settings for the OTEC project."""
 
 from .base import *
 

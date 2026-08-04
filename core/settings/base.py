@@ -1,4 +1,4 @@
-"""Base settings for DZ Commodities project."""
+"""Base settings for the OTEC project."""
 
 import os
 from pathlib import Path
@@ -130,7 +130,7 @@ EMAIL_HOST_PASSWORD = config('BREVO_PASSWORD', default='')
 
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='info@otec-au.com')
 CONTACT_EMAIL = config('CONTACT_EMAIL', default='info@otec-au.com')
-EMAIL_SUBJECT_PREFIX = '[DZ Commodities] '
+EMAIL_SUBJECT_PREFIX = '[OTEC] '
 SERVER_EMAIL = config('SERVER_EMAIL', default='noreply@otec-au.com')
 
 # Security Settings (Base)
