@@ -5,10 +5,10 @@ from .base import *
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'otec-django.caprover.iqed.com.au']
 
-# Print emails to the console instead of sending them. Swap to the SMTP backend
-# below when you need to test real Brevo delivery from your machine.
+# Print emails to the console instead of sending them. Comment this out to fall
+# back to whatever base.py resolved — the Anymail/Brevo API backend when
+# BREVO_API_KEY is set, otherwise plain SMTP — for a real delivery test.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Security settings for development
 CSRF_COOKIE_SECURE = False

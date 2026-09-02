@@ -12,6 +12,9 @@
         <li><a href="{% url 'about' %}">About</a></li>
 <!--        <li><a href="{% url 'certification' %}">Certification</a></li>-->
         <li><a href="#contact" class="contact-trigger">Contact</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'orders:order_list' %}" style="color: var(--acid)">Portal</a></li>
+        {% endif %}
     </ul>
 
     <div class="nav__loc">

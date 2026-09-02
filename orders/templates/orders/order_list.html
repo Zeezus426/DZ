@@ -1,0 +1,215 @@
+{% extends "orders/portal_base.html" %}
+{% load humanize %}
+
+{% block title %}Order Register | OTEC Internal{% endblock %}
+
+{% block portal_content %}
+<div class="portal__head">
+    <div>
+        <span class="tag">// Internal &middot; Order Fulfilment</span>
+        <h1>Order Register</h1>
+    </div>
+
+    <div class="portal__actions">
+        <span class="portal__who">Operator <b>{{ request.user.get_username }}</b></span>
+        <a class="btn btn-primary btn--sm" href="{% url 'orders:order_create' %}">+ New Order</a>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-ghost">Sign Out</button>
+        </form>
+    </div>
+</div>
+
+{# Figures describe the filtered set, so they move with the filters. #}
+<div class="kpis">
+    <div class="kpi">
+        <span class="kpi__k">Orders {% if has_filters %}(filtered){% endif %}</span>
+        <span class="kpi__v">{{ totals.total_count|default:0|intcomma }}</span>
+    </div>
+    <div class="kpi kpi--cyan">
+        <span class="kpi__k">Total tonnage</span>
+        <span class="kpi__v">{{ totals.total_tonnage|default:0|floatformat:0|intcomma }} <small>t</small></span>
+    </div>
+    <div class="kpi">
+        <span class="kpi__k">Open tonnage</span>
+        <span class="kpi__v">{{ open_tonnage|default:0|floatformat:0|intcomma }} <small>t</small></span>
+    </div>
+    <div class="kpi kpi--acid">
+        <span class="kpi__k">Contract value</span>
+        <span class="kpi__v"><small>USD</small> {{ totals.total_sale_value|default:0|floatformat:0|intcomma }}</span>
+    </div>
+    <div class="kpi {% if totals.total_margin and totals.total_margin < 0 %}kpi--alert{% else %}kpi--acid{% endif %}">
+        <span class="kpi__k">Gross margin</span>
+        <span class="kpi__v"><small>USD</small> {{ totals.total_margin|default:0|floatformat:0|intcomma }}</span>
+    </div>
+    <div class="kpi {% if attention_count %}kpi--alert{% endif %}">
+        <span class="kpi__k">Delayed / on hold</span>
+        <span class="kpi__v">{{ attention_count }}</span>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel__in">
+        <form class="filters" method="get" id="filter-form">
+            <div class="form-group">
+                <label for="{{ filter_form.q.id_for_label }}">{{ filter_form.q.label }}</label>
+                {{ filter_form.q }}
+            </div>
+            <div class="form-group">
+                <label for="{{ filter_form.commodity_category.id_for_label }}">{{ filter_form.commodity_category.label }}</label>
+                {{ filter_form.commodity_category }}
+            </div>
+            <div class="form-group">
+                <label for="{{ filter_form.commodity_grade.id_for_label }}">{{ filter_form.commodity_grade.label }}</label>
+                {{ filter_form.commodity_grade }}
+            </div>
+            <div class="form-group">
+                <label for="{{ filter_form.status.id_for_label }}">{{ filter_form.status.label }}</label>
+                {{ filter_form.status }}
+            </div>
+            <div class="form-group">
+                <label for="{{ filter_form.sort.id_for_label }}">{{ filter_form.sort.label }}</label>
+                {{ filter_form.sort }}
+            </div>
+            <div class="filters__go">
+                <button type="submit" class="btn btn-primary btn--sm">Apply</button>
+                <a class="btn-ghost" href="{% url 'orders:order_list' %}">Reset</a>
+            </div>
+        </form>
+
+        <div class="panel__head">
+            <h2>
+                {% if page_obj.paginator.count %}
+                    Showing {{ page_obj.start_index }}&ndash;{{ page_obj.end_index }} of {{ page_obj.paginator.count }}
+                {% else %}
+                    No matching orders
+                {% endif %}
+            </h2>
+            {% if page_obj.paginator.count %}
+                <a class="btn-ghost"
+                   href="?{% if querystring %}{{ querystring }}&amp;{% endif %}export=csv">Export CSV</a>
+            {% endif %}
+        </div>
+
+        {% if orders %}
+        <div class="table-scroll">
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Commodity &amp; grade</th>
+                        <th>Counterparty</th>
+                        <th class="num">Tonnage</th>
+                        <th class="num">Buy USD/t</th>
+                        <th class="num">Sell USD/t</th>
+                        <th class="num">Margin USD</th>
+                        <th>Status</th>
+                        <th>Raised by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    <tr class="{% if order.is_terminal %}is-terminal{% endif %}">
+                        <td>
+                            <a class="ref" href="{{ order.get_absolute_url }}">{{ order.reference }}</a>
+                            <span class="cell-sub">{{ order.created_at|date:"d M Y" }}</span>
+                        </td>
+                        <td>
+                            <span class="branch">{{ order.get_commodity_category_display }}</span>
+                            <span class="cell-sub" style="text-transform:none;letter-spacing:.04em;color:var(--bone);font-size:.9rem;font-family:var(--f-ui)">
+                                {{ order.get_commodity_grade_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ order.counterparty }}
+                            {% if order.email %}<span class="cell-sub">{{ order.email }}</span>{% endif %}
+                        </td>
+                        <td class="num">{{ order.tonnage|floatformat:0|intcomma }}</td>
+                        <td class="num">{{ order.purchase_price|floatformat:2|intcomma }}</td>
+                        <td class="num">{{ order.sale_price|floatformat:2|intcomma }}</td>
+                        <td class="num {% if order.margin_total < 0 %}num--neg{% else %}num--pos{% endif %}">
+                            {{ order.margin_total|floatformat:0|intcomma }}
+                        </td>
+                        <td><span class="pill pill--{{ order.status_tone }}">{{ order.get_status_display }}</span></td>
+                        <td><span class="cell-sub" style="margin-top:0">{{ order.created_by.get_username }}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pager">
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <div class="pager__links">
+                {% if page_obj.has_previous %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page=1">First</a>
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Prev</a>
+                {% else %}
+                    <span class="is-off">First</span>
+                    <span class="is-off">Prev</span>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">Last</a>
+                {% else %}
+                    <span class="is-off">Next</span>
+                    <span class="is-off">Last</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty">
+            <h3>{% if has_filters %}Nothing matches those filters{% else %}The register is empty{% endif %}</h3>
+            <p>
+                {% if has_filters %}
+                    Widen the search or clear the filters to see the full register.
+                {% else %}
+                    Raise the first cargo to start tracking tonnage, pricing and shipment status.
+                {% endif %}
+            </p>
+            {% if has_filters %}
+                <a class="btn btn-secondary btn--sm" href="{% url 'orders:order_list' %}">Clear filters</a>
+            {% else %}
+                <a class="btn btn-primary btn--sm" href="{% url 'orders:order_create' %}">+ New Order</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+        /* -------------------------------------------------------------
+           Filter bar: narrow the grade list to the chosen commodity.
+           Server-side filtering is unaffected — this only hides options.
+           ------------------------------------------------------------- */
+        (function () {
+            var cat = document.getElementById('id_commodity_category');
+            var grade = document.getElementById('id_commodity_grade');
+            if (!cat || !grade) { return; }
+
+            function sync() {
+                var chosen = cat.value;
+                Array.prototype.forEach.call(grade.querySelectorAll('optgroup'), function (group) {
+                    var options = group.querySelectorAll('option');
+                    var visible = false;
+                    Array.prototype.forEach.call(options, function (opt) {
+                        var show = !chosen || opt.dataset.category === chosen;
+                        opt.hidden = !show;
+                        opt.disabled = !show;
+                        if (show) { visible = true; }
+                    });
+                    group.hidden = !visible;
+                });
+                var selected = grade.options[grade.selectedIndex];
+                if (selected && selected.disabled) { grade.value = ''; }
+            }
+
+            cat.addEventListener('change', sync);
+            sync();
+        })();
+{% endblock %}

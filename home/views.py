@@ -1,10 +1,16 @@
+import logging
+
 from django.shortcuts import render
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.decorators import ratelimit
+from anymail.exceptions import AnymailError
 from .forms import ContactForm
+from .prices import get_benchmarks
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -17,8 +23,9 @@ def home(request):
 
     context = {
         'company_name': 'Ocean Technology and Energy Corporation',
-        'page_title': 'Premium Australian Commodities Exporter',
+        'page_title': 'Australian Commodity Market Maker',
         'contact_form': contact_form,
+        'benchmarks': get_benchmarks(),
     }
     return render(request, 'home/home.html', context)
 
@@ -105,35 +112,59 @@ info@otec.ltd
 www.otec.ltd
 """
 
+    # Anymail rides on Django's ordinary EmailMessage — the `tags` and
+    # `metadata` attributes below are picked up by the Brevo API backend and
+    # silently ignored by the SMTP fallback, so both configurations work.
+    notification = EmailMessage(
+        subject=f'Website Contact: {full_subject} - {name}',
+        body=company_email_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[settings.CONTACT_EMAIL],
+        # Replying to the notification reaches the enquirer, not the mailbox
+        # the site sends from.
+        reply_to=[email],
+    )
+    notification.tags = ['contact-form', f'subject-{subject}']
+    notification.metadata = {'form': 'contact', 'subject': subject, 'name': name}
+
+    auto_reply = EmailMessage(
+        subject='Thank you for contacting OTEC',
+        body=visitor_email_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[email],
+        reply_to=[settings.CONTACT_EMAIL],
+    )
+    auto_reply.tags = ['contact-form', 'auto-reply']
+    auto_reply.metadata = {'form': 'contact', 'subject': subject}
+
     try:
-        # Send email to the company
-        send_mail(
-            subject=f'Website Contact: {full_subject} - {name}',
-            message=company_email_body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.CONTACT_EMAIL],
-            fail_silently=False,
-        )
+        # One connection for both messages — with the API backend that is a
+        # single HTTP session rather than two SMTP handshakes.
+        connection = get_connection()
+        connection.send_messages([notification, auto_reply])
 
-        # Send auto-reply to the visitor
-        send_mail(
-            subject='Thank you for contacting OTEC',
-            message=visitor_email_body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            fail_silently=False,
-        )
-
-        return JsonResponse({
-            'success': True,
-            'message': 'Thank you for your message. We will get back to you soon!'
-        })
-
-    except Exception as e:
+    except AnymailError as exc:
+        # ESP rejected the send (bad key, unverified sender, suppressed
+        # recipient). Log the detail; show the visitor something actionable.
+        logger.exception('Brevo rejected the contact-form send: %s', exc)
         return JsonResponse({
             'success': False,
-            'error': f'Failed to send email: {str(e)}'
+            'error': 'We could not send your message right now. '
+                     'Please email info@otec-au.com directly.'
+        }, status=502)
+
+    except Exception as exc:
+        logger.exception('Contact form send failed: %s', exc)
+        return JsonResponse({
+            'success': False,
+            'error': 'We could not send your message right now. '
+                     'Please email info@otec-au.com directly.'
         }, status=500)
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Thank you for your message. We will get back to you soon!'
+    })
 
 
 def about(request):

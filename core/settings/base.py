@@ -19,7 +19,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'anymail',
     'home',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -28,6 +31,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # Backstop for the internal portal — must follow AuthenticationMiddleware
+    # so request.user is populated.
+    'orders.middleware.PortalLoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -110,10 +116,28 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ==========================================
-# EMAIL CONFIGURATION (Brevo via Standard SMTP)
+# EMAIL CONFIGURATION (Brevo via Anymail)
 # ==========================================
+# Anymail talks to Brevo's v3 HTTP API instead of SMTP, which is what gives us
+# per-message tags, metadata and delivery/bounce webhooks — none of which
+# survive a plain SMTP hand-off. The SMTP credentials below are kept as the
+# fallback so a deployment without BREVO_API_KEY still sends mail rather than
+# failing closed.
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ANYMAIL = {
+    'BREVO_API_KEY': config('BREVO_API_KEY', default=''),
+    # Shared secret appended to the webhook URL as ?secret=... — set it before
+    # wiring delivery/bounce webhooks up in the Brevo dashboard.
+    'WEBHOOK_SECRET': config('ANYMAIL_WEBHOOK_SECRET', default=''),
+}
+
+EMAIL_BACKEND = (
+    'anymail.backends.brevo.EmailBackend'
+    if ANYMAIL['BREVO_API_KEY']
+    else 'django.core.mail.backends.smtp.EmailBackend'
+)
+
+# --- SMTP fallback (used only when BREVO_API_KEY is unset) ------------------
 
 # Map the deployment's environment variables to Django's SMTP settings
 EMAIL_HOST = config('BREVO_SMTP', default='smtp-relay.brevo.com')
@@ -148,6 +172,14 @@ SECURE_HSTS_PRELOAD = False
 
 # Allowed hosts (overridden in environment-specific settings)
 ALLOWED_HOSTS = []
+
+
+# ==========================================
+# AUTHENTICATION (internal order portal)
+# ==========================================
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'orders:order_list'
+LOGOUT_REDIRECT_URL = 'home'
 
 
 # Rate limiting settings

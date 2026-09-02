@@ -16,8 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+
+from orders.views import PortalLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Sign-in / sign-out for the internal portal. The custom login view goes
+    # ahead of the include so it wins the 'login' name.
+    path('accounts/login/', PortalLoginView.as_view(), name='login'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    # Internal order fulfilment portal — every view is login-gated, and
+    # PortalLoginRequiredMiddleware gates the whole prefix as a backstop.
+    path('portal/', RedirectView.as_view(pattern_name='orders:order_list', permanent=False)),
+    path('portal/orders/', include('orders.urls')),
     path('', include('home.urls')),
 ]

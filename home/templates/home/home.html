@@ -1,6 +1,6 @@
 {% extends "home/base.html" %}
 
-{% block title %}OTEC | Premium Australian Commodity Exporter{% endblock %}
+{% block title %}OTEC | Australian Commodity Market Maker{% endblock %}
 
 {% block extra_css %}
 /* =========================================================================
@@ -43,7 +43,7 @@
 
 .hero h1 .l { display: block; }
 
-/* The signature: COAL set as an acid-yellow surface, black type knocked out */
+/* The signature: MARKET set as an acid-yellow surface, black type knocked out */
 .hero__mark {
     display: inline-block;
     background: var(--acid);
@@ -150,6 +150,23 @@
 
 .ticker__row b { color: var(--acid); font-weight: 400; }
 .ticker__row i { color: var(--cyan); font-style: normal; }
+
+/* Price entries read brighter than the spec entries they sit among */
+.ticker__row .px { color: var(--bone); }
+.ticker__row .px--up   { color: var(--cyan); }
+.ticker__row .px--down { color: var(--alert); }
+
+/* Accessible restatement of the ticker figures, and the provenance the
+   figures require: these are monthly benchmark averages, not a live quote. */
+.ticker__src {
+    font-family: var(--f-mono);
+    font-size: .64rem;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    line-height: 1.7;
+    color: #5C6068;
+    margin-top: .85rem;
+}
 
 @keyframes slide {
     from { transform: translateX(0); }
@@ -423,16 +440,15 @@
 <!-- ===================== HERO ===================== -->
 <section class="hero">
     <div class="container hero__inner">
-        <span class="tag">&#9670; Australian Resource Export</span>
+        <span class="tag">&#9670; Coal &amp; Iron Ore &middot; Australia to Asia</span>
 
         <h1>
-            <span class="l">Premium</span>
             <span class="l">Australian</span>
-            <span class="l"><span class="hero__mark" data-text="Commodity">Commodity</span></span>
-            <span class="l">Exporter</span>
+            <span class="l">Commodity</span>
+            <span class="l"><span class="hero__mark" data-text="Market">Market</span> Maker</span>
         </h1>
 
-        <p class="hero__lead">Connecting Australian resources with global markets. Reliable sourcing, quality assurance, and dependable delivery.</p>
+        <p class="hero__lead">We stand between Australian producers and Asian mills &mdash; pricing both sides of the trade, matching tonnage to demand, and carrying the cargo through to delivery.</p>
 
         <div class="hero__cta">
             <a href="#commodities" class="btn btn-primary">View Commodities</a>
@@ -461,21 +477,36 @@
         </div>
     </div>
 
-    <!-- Ticker content is drawn from the published specifications below -->
-    <div class="ticker" aria-hidden="true">
-        <div class="ticker__row">
+    <!-- Ticker: benchmark prices from home/prices.py, then the published
+         specifications below. The row is duplicated because the slide keyframe
+         translates by -50% for a seamless loop — hence the two-pass loop. It is
+         aria-hidden for that reason; the accessible statement of the same
+         figures is the caption underneath. -->
+    <div class="ticker">
+        <div class="ticker__row" aria-hidden="true">
+            {% for pass in "12" %}
+            {% for px in benchmarks.series %}
+            <span class="px"><b>{{ px.label }}</b> &middot; {{ px.unit }} {{ px.value }}{% if px.change %} <i class="px--{{ px.direction }}">{% if px.direction == 'up' %}&#9650;{% else %}&#9660;{% endif %} {{ px.change }}%</i>{% endif %}</span>
+            {% endfor %}
             <span><b>Sub-bituminous</b> &middot; GAR 4,200&ndash;5,500 kcal/kg</span>
             <span><b>Thermal</b> &middot; GAR 5,500&ndash;7,000 kcal/kg</span>
             <span><b>Coking</b> &middot; GCR 7,500+ kcal/kg &middot; CSR &gt;60%</span>
             <span><b>Iron ore</b> &middot; specifications on request</span>
             <span><i>Markets</i> &middot; CN &middot; IN &middot; KR &middot; ID</span>
-            <span><b>Sub-bituminous</b> &middot; GAR 4,200&ndash;5,500 kcal/kg</span>
-            <span><b>Thermal</b> &middot; GAR 5,500&ndash;7,000 kcal/kg</span>
-            <span><b>Coking</b> &middot; GCR 7,500+ kcal/kg &middot; CSR &gt;60%</span>
-            <span><b>Iron ore</b> &middot; specifications on request</span>
-            <span><i>Markets</i> &middot; CN &middot; IN &middot; KR &middot; ID</span>
+            {% endfor %}
         </div>
     </div>
+
+    {% if benchmarks %}
+    <div class="container">
+        <p class="ticker__src">
+            {% for px in benchmarks.series %}{{ px.label }} {{ px.unit }} {{ px.value }}{% if not forloop.last %} &middot; {% endif %}{% endfor %}
+            &nbsp;&mdash;&nbsp; benchmark monthly average, {{ benchmarks.as_of }} &middot;
+            source {{ benchmarks.source }}{% if benchmarks.stale %} &middot; awaiting refresh{% endif %} &middot;
+            indicative only, not a quotation
+        </p>
+    </div>
+    {% endif %}
 </section>
 
 <!-- ===================== GRADES ===================== -->

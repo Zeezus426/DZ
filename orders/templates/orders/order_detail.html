@@ -1,0 +1,130 @@
+{% extends "orders/portal_base.html" %}
+{% load humanize %}
+
+{% block title %}{{ order.reference }} | OTEC Internal{% endblock %}
+
+{% block portal_crumbs %}
+<nav class="crumbs">
+    <a href="{% url 'orders:order_list' %}">Order Register</a>
+    <span>/</span>{{ order.reference }}
+</nav>
+{% endblock %}
+
+{% block portal_content %}
+<div class="portal__head">
+    <div>
+        <span class="tag">// {{ order.get_commodity_category_display }} &middot; {{ order.get_commodity_grade_display }}</span>
+        <h1>{{ order.reference }}</h1>
+    </div>
+    <div class="portal__actions">
+        <span class="pill pill--{{ order.status_tone }}">{{ order.get_status_display }}</span>
+        <a class="btn btn-primary btn--sm" href="{% url 'orders:order_update' order.pk %}">Edit Order</a>
+        <a class="btn-ghost" href="{% url 'orders:order_list' %}">Back to register</a>
+    </div>
+</div>
+
+<div class="kpis">
+    <div class="kpi kpi--cyan">
+        <span class="kpi__k">Tonnage</span>
+        <span class="kpi__v">{{ order.tonnage|floatformat:0|intcomma }} <small>t</small></span>
+    </div>
+    <div class="kpi">
+        <span class="kpi__k">Purchase</span>
+        <span class="kpi__v"><small>USD</small> {{ order.purchase_price|floatformat:2|intcomma }} <small>/t</small></span>
+    </div>
+    <div class="kpi">
+        <span class="kpi__k">Sale</span>
+        <span class="kpi__v"><small>USD</small> {{ order.sale_price|floatformat:2|intcomma }} <small>/t</small></span>
+    </div>
+    <div class="kpi {% if order.margin_total < 0 %}kpi--alert{% else %}kpi--acid{% endif %}">
+        <span class="kpi__k">Gross margin</span>
+        <span class="kpi__v"><small>USD</small> {{ order.margin_total|floatformat:2|intcomma }}</span>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="panel">
+        <div class="panel__in">
+            <div class="panel__head"><h2>Order Detail</h2></div>
+            <div class="panel__body">
+                <dl class="dl">
+                    <dt>Commodity</dt>
+                    <dd>{{ order.get_commodity_category_display }}</dd>
+
+                    <dt>Grade</dt>
+                    <dd>{{ order.get_commodity_grade_display }}</dd>
+
+                    <dt>Tonnage</dt>
+                    <dd>{{ order.tonnage|floatformat:2|intcomma }} t</dd>
+
+                    <dt>Status</dt>
+                    <dd><span class="pill pill--{{ order.status_tone }}">{{ order.get_status_display }}</span></dd>
+
+                    <dt>Counterparty</dt>
+                    <dd>{{ order.counterparty }}</dd>
+
+                    <dt>Phone</dt>
+                    <dd>{% if order.phone %}<a href="tel:{{ order.phone }}">{{ order.phone }}</a>{% else %}<span class="muted">Not provided</span>{% endif %}</dd>
+
+                    <dt>Email</dt>
+                    <dd>{% if order.email %}<a href="mailto:{{ order.email }}">{{ order.email }}</a>{% else %}<span class="muted">Not provided</span>{% endif %}</dd>
+
+                    <dt>Website</dt>
+                    <dd>{% if order.website %}<a href="{{ order.website }}" target="_blank" rel="noopener noreferrer">{{ order.website }}</a>{% else %}<span class="muted">Not provided</span>{% endif %}</dd>
+
+                    <dt>Raised by</dt>
+                    <dd>{{ order.created_by.get_full_name|default:order.created_by.get_username }}</dd>
+
+                    <dt>Created</dt>
+                    <dd>{{ order.created_at|date:"d M Y, H:i" }}</dd>
+
+                    <dt>Last updated</dt>
+                    <dd>{{ order.updated_at|date:"d M Y, H:i" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel__in">
+            <div class="panel__head"><h2>Position</h2></div>
+            <div class="panel__body">
+                <table class="ledger">
+                    <tr>
+                        <th>Purchase &mdash; {{ order.tonnage|floatformat:0|intcomma }} t @ {{ order.purchase_price|floatformat:2 }}</th>
+                        <td>USD {{ order.purchase_total|floatformat:2|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sale &mdash; {{ order.tonnage|floatformat:0|intcomma }} t @ {{ order.sale_price|floatformat:2 }}</th>
+                        <td>USD {{ order.sale_total|floatformat:2|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <th>Margin per tonne</th>
+                        <td class="{% if order.margin_per_tonne < 0 %}num--neg{% endif %}">
+                            USD {{ order.margin_per_tonne|floatformat:2|intcomma }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Margin on cost</th>
+                        <td class="{% if order.margin_pct and order.margin_pct < 0 %}num--neg{% endif %}">
+                            {% if order.margin_pct is not None %}{{ order.margin_pct|floatformat:2 }}%{% else %}&mdash;{% endif %}
+                        </td>
+                    </tr>
+                    <tr class="total">
+                        <th>Gross margin</th>
+                        <td class="{% if order.margin_total < 0 %}num--neg{% endif %}">
+                            USD {{ order.margin_total|floatformat:2|intcomma }}
+                        </td>
+                    </tr>
+                </table>
+
+                {% if order.margin_total < 0 %}
+                    <p class="form-help" style="color:var(--alert);margin-top:1.2rem">
+                        This cargo is being sold below cost.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

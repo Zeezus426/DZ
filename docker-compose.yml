@@ -20,6 +20,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - DB_HOST=db
       - DB_PORT=5432
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - ANYMAIL_WEBHOOK_SECRET=${ANYMAIL_WEBHOOK_SECRET}
       - BREVO_SMTP=${BREVO_SMTP:-smtp-relay.brevo.com}
       - BREVO_PORT=${BREVO_PORT:-587}
       - BREVO_LOGIN=${BREVO_LOGIN}
@@ -48,7 +50,17 @@ services:
     image: postgres:15-alpine
     container_name: dz-db
     restart: unless-stopped
+    # Published so `manage.py runserver` on the host can reach it. Without
+    # this the container is only addressable as `db` on dz-network, and a
+    # host-run Django gets "connection refused" on localhost however healthy
+    # the container looks. The app service talks to `db:5432` over the
+    # network and is unaffected by whatever host port is chosen here.
+    ports:
+      - "${DB_HOST_PORT:-5432}:5432"
     environment:
+      # NOTE: Postgres only honours these on FIRST init of the volume. Once
+      # dz_postgres_data exists, changing them here does nothing — the role
+      # and database baked in at creation are what you must put in .env.
       - POSTGRES_DB=${DB_NAME:-dz}
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
