@@ -1,0 +1,705 @@
+{% extends "home/base.html" %}
+
+{% block title %}OTEC | Australian Commodity Market Maker{% endblock %}
+
+{% block extra_css %}
+/* =========================================================================
+   HERO — the thesis: a graded carbon ladder, stated as a spec sheet
+   ========================================================================= */
+.hero {
+    position: relative;
+    padding: calc(var(--nav-h) + 92px) 0 0;
+    overflow: hidden;
+}
+
+/* Faint blueprint grid, anchored behind the headline only */
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgba(38,42,50,.5) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(38,42,50,.5) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 72%);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.85), transparent 72%);
+    pointer-events: none;
+}
+
+.hero__inner { position: relative; }
+
+.hero h1 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 11vw, 8.5rem);
+    line-height: .87;
+    letter-spacing: -.05em;
+    text-transform: uppercase;
+    margin: 1.5rem 0 0;
+    color: var(--bone);
+}
+
+.hero h1 .l { display: block; }
+
+.hero__mark {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--brand-3), var(--brand-2));
+    color: var(--void);
+    padding: 0 .22em .05em;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 74%, calc(100% - .32em) 100%, 0 100%);
+    box-shadow: 0 16px 38px rgba(25, 117, 214, 0.2);
+}
+
+/* Chromatic aberration — two offset ghosts, clipped to opposite halves */
+.hero__mark::before,
+.hero__mark::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: .3em;
+    pointer-events: none;
+}
+
+.hero__mark::before {
+    color: var(--cyan);
+    clip-path: inset(0 0 52% 0);
+    animation: ab-a 4.2s steps(2, end) infinite;
+}
+
+.hero__mark::after {
+    color: var(--alert);
+    clip-path: inset(52% 0 0 0);
+    animation: ab-b 3.1s steps(2, end) infinite;
+}
+
+@keyframes ab-a {
+    0%, 88%, 100% { transform: translate(0,0); opacity: 0; }
+    90%           { transform: translate(-4px,-2px); opacity: .85; }
+    94%           { transform: translate(3px,1px);  opacity: .6; }
+}
+
+@keyframes ab-b {
+    0%, 84%, 100% { transform: translate(0,0); opacity: 0; }
+    88%           { transform: translate(4px,2px);  opacity: .8; }
+    92%           { transform: translate(-3px,-1px); opacity: .5; }
+}
+
+.hero__lead {
+    color: var(--ash);
+    font-size: 1.2rem;
+    max-width: 52ch;
+    margin: 2rem 0 0;
+}
+
+.hero__cta { display: flex; gap: 1rem; flex-wrap: wrap; margin: 2.5rem 0 0; }
+
+/* Hero readout tiles ------------------------------------------------------ */
+.hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 1rem;
+    margin: 5rem 0 0;
+}
+
+.stat { padding: 1.4rem 1.5rem 1.5rem; }
+
+.stat__k {
+    font-family: var(--f-mono);
+    font-size: .68rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ash);
+}
+
+.stat__v {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -.01em;
+    margin-top: .5rem;
+}
+
+.stat__v em { font-style: normal; color: var(--acid); }
+
+/* Spec ticker ------------------------------------------------------------- */
+.ticker {
+    margin-top: 5rem;
+    border-top: 1px solid var(--iron);
+    border-bottom: 1px solid var(--iron);
+    background: var(--pit);
+    overflow: hidden;
+    padding: .8rem 0;
+}
+
+.ticker__row {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    animation: slide 44s linear infinite;
+    font-family: var(--f-mono);
+    font-size: .78rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ash);
+    white-space: nowrap;
+}
+
+.ticker__row b { color: var(--acid); font-weight: 400; }
+.ticker__row i { color: var(--cyan); font-style: normal; }
+
+/* Price entries read brighter than the spec entries they sit among */
+.ticker__row .px { color: var(--bone); }
+.ticker__row .px--up   { color: var(--cyan); }
+.ticker__row .px--down { color: var(--alert); }
+
+/* Accessible restatement of the ticker figures, and the provenance the
+   figures require: these are monthly benchmark averages, not a live quote. */
+.ticker__src {
+    font-family: var(--f-mono);
+    font-size: .64rem;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    line-height: 1.7;
+    color: #5C6068;
+    margin-top: .85rem;
+}
+
+@keyframes slide {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* =========================================================================
+   COMMODITIES — one block per division. Coal carries three graded ranks;
+   iron ore is listed without figures until specifications are supplied.
+   ========================================================================= */
+.division + .division { margin-top: 4.5rem; }
+
+.division__head {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding-bottom: 1.1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--iron);
+}
+
+.division__n {
+    font-family: var(--f-mono);
+    font-size: .74rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--acid);
+}
+
+.division__name {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+    line-height: 1;
+    letter-spacing: -.015em;
+    text-transform: uppercase;
+}
+
+.division__note {
+    font-family: var(--f-mono);
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-left: auto;
+}
+
+/* Iron ore: a real line with no published figures yet. Presented as a
+   deliberate "on request" panel rather than an empty card. */
+.pending {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.75rem 2.5rem;
+    align-items: center;
+    padding: 2.4rem 2rem;
+}
+
+.pending h4 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+.pending p { color: var(--ash); font-size: .97rem; margin-top: .5rem; max-width: 58ch; }
+
+.pending__req {
+    font-family: var(--f-mono);
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-top: .9rem;
+    display: block;
+}
+
+/* min() lets the track collapse below its preferred 320px on very narrow
+   screens (320px phones); a bare minmax(320px,1fr) would force the grid
+   wider than the viewport and cause a horizontal scroll. */
+.grades__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 1.5rem;
+}
+
+.grade { padding: 0; height: 100%; display: flex; flex-direction: column; }
+
+.grade__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.4rem 1.6rem 1.1rem;
+    border-bottom: 1px solid var(--iron);
+}
+
+.grade__rank {
+    font-family: var(--f-mono);
+    font-size: 2rem;
+    line-height: 1;
+    color: #4A4F58;
+}
+
+.grade__rank b { color: var(--acid); font-weight: 400; }
+
+.grade__name {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.grade__body { padding: 1.4rem 1.6rem 1.6rem; display: flex; flex-direction: column; flex: 1; }
+
+.grade__body > p {
+    color: var(--ash);
+    font-size: .97rem;
+    margin-bottom: 1.6rem;
+}
+
+.grade__specs { display: grid; gap: .95rem; }
+
+/* Range-band meter: shows min–max against a disclosed scale ---------------- */
+.meter { display: grid; grid-template-columns: 5.2rem 1fr; gap: .2rem .9rem; align-items: center; }
+
+.meter__k {
+    font-family: var(--f-mono);
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ash);
+}
+
+.meter__v {
+    font-family: var(--f-mono);
+    font-size: .78rem;
+    letter-spacing: .06em;
+    color: var(--bone);
+    text-align: right;
+    grid-column: 2;
+}
+
+.meter__v em { font-style: normal; color: #5C6068; }
+
+.meter__track {
+    grid-column: 1 / -1;
+    position: relative;
+    height: 6px;
+    background: var(--void);
+    box-shadow: inset 0 0 0 1px var(--iron);
+    overflow: hidden;
+}
+
+/* Tick marks at each quarter of the scale */
+.meter__track::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--iron) calc(25% - 1px) 25%);
+}
+
+.meter__band {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: var(--a);
+    width: 0;
+    background: var(--acid);
+    transition: width .9s cubic-bezier(.2,.8,.2,1);
+    transition-delay: var(--d, 0ms);
+}
+
+.is-in .meter__band { width: calc(var(--b) - var(--a)); }
+
+.meter--cyan .meter__band { background: var(--cyan); }
+
+/* Pinned to the card floor so the scale caption aligns across all three,
+   whether a grade carries three specs or four. */
+.grade__scale {
+    font-family: var(--f-mono);
+    font-size: .64rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #5C6068;
+    margin-top: auto;   /* floor-aligned; gap comes from padding, not margin */
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--iron);
+}
+
+/* =========================================================================
+   MARKETS — destination manifest
+   ========================================================================= */
+.reach__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+    gap: 1px;
+    background: var(--iron);
+    border: 1px solid var(--iron);
+}
+
+.dest {
+    background: var(--void);
+    padding: 2rem 1.6rem;
+    transition: background .16s linear;
+}
+
+.dest:hover { background: var(--steel); }
+
+.dest__code {
+    font-family: var(--f-mono);
+    font-size: .7rem;
+    letter-spacing: .2em;
+    color: var(--acid);
+}
+
+/* Two-line min-height keeps the "ex Australia" caption on one baseline
+   across all four cells, including the one that wraps (South Korea). */
+.dest__name {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    margin-top: .7rem;
+    min-height: 2.2em;
+}
+
+.dest__from {
+    font-family: var(--f-mono);
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #5C6068;
+    margin-top: .5rem;
+}
+
+/* =========================================================================
+   CLOSING CALL
+   ========================================================================= */
+.close__panel { padding: 3.5rem 3rem; text-align: center; }
+
+.close__panel h2 {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4.5vw, 3rem);
+    line-height: .98;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.close__panel p { color: var(--ash); max-width: 46ch; margin: 1.1rem auto 2rem; }
+
+@media (max-width: 760px) {
+    .pending { grid-template-columns: 1fr; padding: 1.9rem 1.5rem; }
+    .division__note { margin-left: 0; width: 100%; }
+    .hero { padding-top: calc(var(--nav-h) + 56px); }
+    .hero__stats { grid-template-columns: 1fr; margin-top: 3.5rem; }
+    .ticker { margin-top: 3.5rem; }
+    .hero__cta .btn { width: 100%; text-align: center; }
+    .close__panel { padding: 2.5rem 1.5rem; }
+    .grade__name { font-size: 1.15rem; }
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+    <div class="container hero__inner">
+        <span class="tag">&#9670; Coal &amp; Iron Ore &middot; Australia to Asia</span>
+
+        <h1>
+            <span class="l">Australian</span>
+            <span class="l">Commodity</span>
+            <span class="l"><span class="hero__mark" data-text="Market">Market</span> Maker</span>
+        </h1>
+
+        <p class="hero__lead">We stand between Australian producers and Asian mills &mdash; pricing both sides of the trade, matching tonnage to demand, and carrying the cargo through to delivery.</p>
+
+        <div class="hero__cta">
+            <a href="#commodities" class="btn btn-primary">View Commodities</a>
+            <button class="btn btn-secondary contact-trigger">Open Enquiry</button>
+        </div>
+
+        <div class="hero__stats">
+            <div class="frame">
+                <div class="frame__in stat">
+                    <div class="stat__k">Commodity lines</div>
+                    <div class="stat__v">Coal <em>&amp;</em> iron ore</div>
+                </div>
+            </div>
+            <div class="frame">
+                <div class="frame__in stat">
+                    <div class="stat__k">Coal grades</div>
+                    <div class="stat__v">Three<em>.</em></div>
+                </div>
+            </div>
+            <div class="frame">
+                <div class="frame__in stat">
+                    <div class="stat__k">Export markets</div>
+                    <div class="stat__v">Four<em>.</em></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticker: benchmark prices from home/prices.py, then the published
+         specifications below. The row is duplicated because the slide keyframe
+         translates by -50% for a seamless loop — hence the two-pass loop. It is
+         aria-hidden for that reason; the accessible statement of the same
+         figures is the caption underneath. -->
+    <div class="ticker">
+        <div class="ticker__row" aria-hidden="true">
+            {% for pass in "12" %}
+            {% for px in benchmarks.series %}
+            <span class="px"><b>{{ px.label }}</b> &middot; {{ px.unit }} {{ px.value }}{% if px.change %} <i class="px--{{ px.direction }}">{% if px.direction == 'up' %}&#9650;{% else %}&#9660;{% endif %} {{ px.change }}%</i>{% endif %}</span>
+            {% endfor %}
+            <span><b>Sub-bituminous</b> &middot; GAR 4,200&ndash;5,500 kcal/kg</span>
+            <span><b>Thermal</b> &middot; GAR 5,500&ndash;7,000 kcal/kg</span>
+            <span><b>Coking</b> &middot; GCR 7,500+ kcal/kg &middot; CSR &gt;60%</span>
+            <span><b>Iron ore</b> &middot; specifications on request</span>
+            <span><i>Markets</i> &middot; CN &middot; IN &middot; KR &middot; ID</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if benchmarks %}
+    <div class="container">
+        <p class="ticker__src">
+            {% for px in benchmarks.series %}{{ px.label }} {{ px.unit }} {{ px.value }}{% if not forloop.last %} &middot; {% endif %}{% endfor %}
+            &nbsp;&mdash;&nbsp; benchmark monthly average, {{ benchmarks.as_of }} &middot;
+            source {{ benchmarks.source }}{% if benchmarks.stale %} &middot; awaiting refresh{% endif %} &middot;
+            indicative only, not a quotation
+        </p>
+    </div>
+    {% endif %}
+</section>
+
+<!-- ===================== GRADES ===================== -->
+<section class="band band--pit" id="commodities">
+    <div class="container">
+        <div class="band__head">
+            <span class="tag">&#9670; Product Index</span>
+            <h2>What we <br>export</h2>
+            <p>Two commodity lines out of Australia. Where figures are published below they are the contracted specification range &mdash; bars show that range against a fixed scale, not a single point.</p>
+        </div>
+
+        <!-- Division 01 — coal, three graded ranks -->
+        <div class="division">
+            <div class="division__head">
+                <span class="division__n">Division 01</span>
+                <h3 class="division__name">Coal</h3>
+                <span class="division__note">Graded by carbon content</span>
+            </div>
+
+        <div class="grades__grid">
+
+            <!-- 01 — lowest rank -->
+            <div class="frame">
+                <div class="frame__in grade" data-reveal>
+                    <div class="grade__top">
+                        <span class="grade__rank">0<b>1</b></span>
+                        <span class="grade__name">Sub-bituminous <br>Coal</span>
+                    </div>
+                    <div class="grade__body">
+                        <p>Medium-rank thermal coal ideal for utility-scale electricity. Low emissions and cost-effective energy output.</p>
+
+                        <div class="grade__specs">
+                            <div class="meter">
+                                <span class="meter__k">GAR</span>
+                                <span class="meter__v">4,200&ndash;5,500 <em>/ 8,000</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:52.5%; --b:68.75%; --d:0ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Moisture</span>
+                                <span class="meter__v">18&ndash;38% <em>/ 50%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:36%; --b:76%; --d:90ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Ash</span>
+                                <span class="meter__v">3&ndash;10% <em>/ 40%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:7.5%; --b:25%; --d:180ms;"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="grade__scale">Scale &mdash; GAR 0&ndash;8,000 kcal/kg &middot; moisture 0&ndash;50% &middot; ash 0&ndash;40%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 02 — mid rank -->
+            <div class="frame">
+                <div class="frame__in grade" data-reveal>
+                    <div class="grade__top">
+                        <span class="grade__rank">0<b>2</b></span>
+                        <span class="grade__name">Thermal <br>Coal</span>
+                    </div>
+                    <div class="grade__body">
+                        <p>High-quality thermal coal for power generation. Consistent calorific value and low sulfur content for efficient energy production.</p>
+
+                        <div class="grade__specs">
+                            <div class="meter">
+                                <span class="meter__k">GAR</span>
+                                <span class="meter__v">5,500&ndash;7,000 <em>/ 8,000</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:68.75%; --b:87.5%; --d:0ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Ash</span>
+                                <span class="meter__v">3&ndash;12% <em>/ 40%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:7.5%; --b:30%; --d:90ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Sulfur</span>
+                                <span class="meter__v">0.5&ndash;1.5% <em>/ 3%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:16.6%; --b:50%; --d:180ms;"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="grade__scale">Scale &mdash; GAR 0&ndash;8,000 kcal/kg &middot; ash 0&ndash;40% &middot; sulfur 0&ndash;3%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 03 — highest rank -->
+            <div class="frame frame--acid">
+                <div class="frame__in grade" data-reveal>
+                    <div class="grade__top">
+                        <span class="grade__rank">0<b>3</b></span>
+                        <span class="grade__name">Coking <br>Coal</span>
+                    </div>
+                    <div class="grade__body">
+                        <p>Premium metallurgical coal for steel production. Low ash content with excellent coking properties for blast furnace operations.</p>
+
+                        <div class="grade__specs">
+                            <div class="meter">
+                                <span class="meter__k">GCR</span>
+                                <span class="meter__v">7,500+ <em>/ 8,000</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:93.75%; --b:100%; --d:0ms;"></span></span>
+                            </div>
+                            <div class="meter">
+                                <span class="meter__k">CSR</span>
+                                <span class="meter__v">&gt;60% <em>/ 100%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:60%; --b:100%; --d:90ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Ash</span>
+                                <span class="meter__v">&lt;8% <em>/ 40%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:0%; --b:20%; --d:180ms;"></span></span>
+                            </div>
+                            <div class="meter meter--cyan">
+                                <span class="meter__k">Sulfur</span>
+                                <span class="meter__v">&lt;1% <em>/ 3%</em></span>
+                                <span class="meter__track"><span class="meter__band" style="--a:0%; --b:33.3%; --d:270ms;"></span></span>
+                            </div>
+                        </div>
+
+                        <div class="grade__scale">Scale &mdash; GCR 0&ndash;8,000 kcal/kg &middot; CSR 0&ndash;100% &middot; ash 0&ndash;40% &middot; sulfur 0&ndash;3%</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div><!-- /division 01 -->
+
+        <!-- Division 02 — iron ore. No figures published until specifications
+             are confirmed; the panel asks rather than estimates. -->
+        <div class="division">
+            <div class="division__head">
+                <span class="division__n">Division 02</span>
+                <h3 class="division__name">Iron Ore</h3>
+                <span class="division__note">Specifications on request</span>
+            </div>
+
+            <div class="frame">
+                <div class="frame__in pending">
+                    <div>
+                        <h4>Steelmaking feed</h4>
+                        <p>Iron ore supplied into the same markets as our coal grades, with tonnage and specification confirmed per contract.</p>
+                        <span class="pending__req">Fe content, silica, alumina and moisture quoted on enquiry</span>
+                    </div>
+                    <button class="btn btn-secondary contact-trigger">Request specs</button>
+                </div>
+            </div>
+        </div><!-- /division 02 -->
+    </div>
+</section>
+
+<!-- ===================== MARKETS ===================== -->
+<section class="band" id="reach">
+    <div class="container">
+        <div class="band__head">
+            <span class="tag tag--cyan">&#9670; Destination Manifest</span>
+            <h2>Where it lands</h2>
+        </div>
+
+        <div class="reach__grid">
+            <div class="dest">
+                <div class="dest__code">CN</div>
+                <div class="dest__name">China</div>
+                <div class="dest__from">Ex Australia</div>
+            </div>
+            <div class="dest">
+                <div class="dest__code">IN</div>
+                <div class="dest__name">India</div>
+                <div class="dest__from">Ex Australia</div>
+            </div>
+            <div class="dest">
+                <div class="dest__code">KR</div>
+                <div class="dest__name">South <br>Korea</div>
+                <div class="dest__from">Ex Australia</div>
+            </div>
+            <div class="dest">
+                <div class="dest__code">ID</div>
+                <div class="dest__name">Indonesia</div>
+                <div class="dest__from">Ex Australia</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== CLOSE ===================== -->
+<section class="band band--pit">
+    <div class="container">
+        <div class="frame frame--acid">
+            <div class="frame__in close__panel">
+                <h2>Request a <br>specification sheet</h2>
+                <p>Tell us the grade and tonnage you need. We reply with available specifications and delivery terms.</p>
+                <button class="btn btn-primary contact-trigger">Open Enquiry</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

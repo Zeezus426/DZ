@@ -1,0 +1,156 @@
+{% extends "home/base.html" %}
+
+{% block title %}Certification | OTEC{% endblock %}
+
+{% block extra_css %}
+.certs { border-top: 1px solid var(--iron); }
+
+.cert {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+    padding: 2.2rem 0;
+    border-bottom: 1px solid var(--iron);
+    transition: background .16s linear;
+}
+
+.cert:hover { background: var(--steel); }
+
+.cert__ref {
+    font-family: var(--f-mono);
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--acid);
+}
+
+.cert__h {
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    margin-top: .5rem;
+}
+
+.cert p { color: var(--ash); font-size: .97rem; margin-top: .5rem; max-width: 62ch; }
+
+/* Verification stamp — a mark, not a claim of anything beyond the reference */
+.cert__stamp {
+    font-family: var(--f-mono);
+    font-size: .66rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--void);
+    background: var(--acid);
+    padding: .5rem .8rem;
+    clip-path: var(--notch-sm);
+    white-space: nowrap;
+}
+
+/* Registry block ---------------------------------------------------------- */
+.registry { margin-top: 4rem; }
+
+.registry__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+    gap: 1px;
+    background: var(--iron);
+    border: 1px solid var(--iron);
+}
+
+.registry__cell { background: var(--void); padding: 1.6rem 1.5rem; }
+
+.registry__k {
+    font-family: var(--f-mono);
+    font-size: .66rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--ash);
+}
+
+.registry__v {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-top: .5rem;
+    line-height: 1.25;
+}
+
+@media (max-width: 760px) {
+    .cert { grid-template-columns: 1fr; }
+    .cert__stamp { justify-self: start; }
+}
+{% endblock %}
+
+{% block content %}
+
+<header class="page-head">
+    <div class="container">
+        <span class="tag">&#9670; Compliance Record</span>
+        <h1>Certification</h1>
+        <p>Committed to quality, compliance, and responsible business practices.</p>
+    </div>
+</header>
+
+<section class="band">
+    <div class="container">
+        <div class="certs">
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">ISO 9001:2015</span>
+                    <h3 class="cert__h">Quality Management System</h3>
+                    <p>Certified quality management ensuring consistent products and services that meet customer and regulatory requirements.</p>
+                </div>
+                <span class="cert__stamp">Certified</span>
+            </div>
+
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">ISO 14001</span>
+                    <h3 class="cert__h">Environmental Management</h3>
+                    <p>Environmental management system demonstrating commitment to minimizing environmental impact.</p>
+                </div>
+                <span class="cert__stamp">Certified</span>
+            </div>
+
+            <div class="cert">
+                <div>
+                    <span class="cert__ref">DFAT Export Licence</span>
+                    <h3 class="cert__h">Export Authorization</h3>
+                    <p>Authorized by the Australian Government Department of Foreign Affairs and Trade to export commodities internationally.</p>
+                </div>
+                <span class="cert__stamp">Authorized</span>
+            </div>
+        </div>
+
+        <div class="registry">
+            <div class="band__head" style="margin-bottom:1.5rem;">
+                <span class="tag tag--cyan">&#9670; Registry</span>
+                <h2 style="font-size:clamp(1.6rem,3.5vw,2.2rem);">Company information</h2>
+            </div>
+
+            <div class="registry__grid">
+                <div class="registry__cell">
+                    <div class="registry__k">Company name</div>
+                    <div class="registry__v">Ocean Technology and Energy Corporation Pty Ltd</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">ABN</div>
+                    <div class="registry__v">38 64600 4674</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">Established</div>
+                    <div class="registry__v">2026</div>
+                </div>
+                <div class="registry__cell">
+                    <div class="registry__k">Location</div>
+                    <div class="registry__v">Sydney, Australia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

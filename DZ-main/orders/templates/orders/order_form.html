@@ -1,0 +1,222 @@
+{% extends "orders/portal_base.html" %}
+
+{% block title %}{{ heading }} | OTEC Internal{% endblock %}
+
+{% block portal_crumbs %}
+<nav class="crumbs">
+    <a href="{% url 'orders:order_list' %}">Order Register</a>
+    <span>/</span>
+    {% if order %}<a href="{{ order.get_absolute_url }}">{{ order.reference }}</a><span>/</span>Edit{% else %}New Order{% endif %}
+</nav>
+{% endblock %}
+
+{% block portal_content %}
+<div class="portal__head">
+    <div>
+        <span class="tag">// {% if order %}Amend Cargo{% else %}Raise Cargo{% endif %}</span>
+        <h1>{{ heading }}</h1>
+    </div>
+    <div class="portal__actions">
+        <span class="portal__who">Operator <b>{{ request.user.get_username }}</b></span>
+        <a class="btn-ghost" href="{% url 'orders:order_list' %}">Back to register</a>
+    </div>
+</div>
+
+<div class="panel" style="max-width: 900px;">
+    <div class="panel__in">
+        <div class="panel__head">
+            <h2>{% if order %}{{ order.reference }}{% else %}Order Details{% endif %}</h2>
+            {% if order %}<span class="pill pill--{{ order.status_tone }}">{{ order.get_status_display }}</span>{% endif %}
+        </div>
+
+        <div class="panel__body">
+            <p class="form-note">
+                Authorship is stamped automatically — this order is recorded against
+                <b style="color:var(--acid)">{% if order %}{{ order.created_by.get_username }}{% else %}{{ request.user.get_username }}{% endif %}</b>
+                and the reference is allocated on save. Neither is editable.
+            </p>
+
+            {% if form.non_field_errors %}
+                <div class="flash flash--error">{{ form.non_field_errors|striptags }}</div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="fieldset-head">01 &middot; Commodity</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form.commodity_category.id_for_label }}">Commodity <span>*</span></label>
+                        {{ form.commodity_category }}
+                        {% for error in form.commodity_category.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Top level of the tree</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.commodity_grade.id_for_label }}">Grade <span>*</span></label>
+                        {{ form.commodity_grade }}
+                        {% for error in form.commodity_grade.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Narrows to the commodity above</div>
+                    </div>
+                </div>
+
+                <div class="fieldset-head">02 &middot; Commercials</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="{{ form.tonnage.id_for_label }}">Tonnage (t) <span>*</span></label>
+                        {{ form.tonnage }}
+                        {% for error in form.tonnage.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Metric tonnes</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">Status <span>*</span></label>
+                        {{ form.status }}
+                        {% for error in form.status.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.purchase_price.id_for_label }}">Purchase price <span>*</span></label>
+                        {{ form.purchase_price }}
+                        {% for error in form.purchase_price.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">USD per tonne — bought at</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.sale_price.id_for_label }}">Sale price <span>*</span></label>
+                        {{ form.sale_price }}
+                        {% for error in form.sale_price.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">USD per tonne — sold at</div>
+                    </div>
+                    <div class="span-2">
+                        {# Live readback so the operator sees the margin before committing. #}
+                        <table class="ledger" id="calc">
+                            <tr><th>Purchase total</th><td>USD <span data-calc="buy">&mdash;</span></td></tr>
+                            <tr><th>Sale total</th><td>USD <span data-calc="sell">&mdash;</span></td></tr>
+                            <tr class="total"><th>Gross margin</th><td>USD <span data-calc="margin">&mdash;</span></td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="fieldset-head">03 &middot; Counterparty</div>
+                <div class="form-grid">
+                    <div class="span-2 form-group">
+                        <label for="{{ form.counterparty.id_for_label }}">Counterparty <span>*</span></label>
+                        {{ form.counterparty }}
+                        {% for error in form.counterparty.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Phone</label>
+                        {{ form.phone }}
+                        {% for error in form.phone.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Optional</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Optional</div>
+                    </div>
+                    <div class="span-2 form-group">
+                        <label for="{{ form.website.id_for_label }}">Website</label>
+                        {{ form.website }}
+                        {% for error in form.website.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                        <div class="form-help">Optional</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+                    <a class="btn-ghost" href="{% if order %}{{ order.get_absolute_url }}{% else %}{% url 'orders:order_list' %}{% endif %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+        (function () {
+            /* ---------------------------------------------------------
+               Commodity tree: the grade list only offers leaves that hang
+               off the chosen commodity. The server re-checks the pair, so
+               this is convenience, not enforcement.
+               --------------------------------------------------------- */
+            var cat = document.getElementById('id_commodity_category');
+            var grade = document.getElementById('id_commodity_grade');
+
+            function syncGrades() {
+                if (!cat || !grade) { return; }
+                var chosen = cat.value;
+                Array.prototype.forEach.call(grade.querySelectorAll('optgroup'), function (group) {
+                    var visible = false;
+                    Array.prototype.forEach.call(group.querySelectorAll('option'), function (opt) {
+                        var show = !chosen || opt.dataset.category === chosen;
+                        opt.hidden = !show;
+                        opt.disabled = !show;
+                        if (show) { visible = true; }
+                    });
+                    group.hidden = !visible;
+                });
+                var selected = grade.options[grade.selectedIndex];
+                if (selected && selected.disabled) { grade.value = ''; }
+            }
+
+            /* Picking a grade first back-fills its commodity, so the two
+               selects agree whichever end the operator starts from. */
+            function syncCategory() {
+                if (!cat || !grade || !grade.value) { return; }
+                var parent = grade.value.split('.')[0];
+                if (cat.value !== parent) {
+                    cat.value = parent;
+                    syncGrades();
+                }
+            }
+
+            if (cat && grade) {
+                cat.addEventListener('change', syncGrades);
+                grade.addEventListener('change', syncCategory);
+                syncGrades();
+            }
+
+            /* ---------------------------------------------------------
+               Live margin readback
+               --------------------------------------------------------- */
+            var tonnage = document.getElementById('id_tonnage');
+            var buy = document.getElementById('id_purchase_price');
+            var sell = document.getElementById('id_sale_price');
+            var out = {
+                buy: document.querySelector('[data-calc="buy"]'),
+                sell: document.querySelector('[data-calc="sell"]'),
+                margin: document.querySelector('[data-calc="margin"]')
+            };
+
+            function money(value) {
+                return value.toLocaleString('en-AU', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function recalc() {
+                var t = parseFloat(tonnage.value);
+                var b = parseFloat(buy.value);
+                var s = parseFloat(sell.value);
+
+                if (isNaN(t) || isNaN(b) || isNaN(s)) {
+                    out.buy.textContent = out.sell.textContent = out.margin.textContent = '—';
+                    out.margin.style.color = '';
+                    return;
+                }
+
+                var margin = t * (s - b);
+                out.buy.textContent = money(t * b);
+                out.sell.textContent = money(t * s);
+                out.margin.textContent = money(margin);
+                out.margin.style.color = margin < 0 ? '#FF2E4C' : '';
+            }
+
+            if (tonnage && buy && sell && out.margin) {
+                [tonnage, buy, sell].forEach(function (el) {
+                    el.addEventListener('input', recalc);
+                });
+                recalc();
+            }
+        })();
+{% endblock %}
