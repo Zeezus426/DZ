@@ -1,0 +1,176 @@
+import logging
+
+from django.shortcuts import render
+from django.core.mail import EmailMessage, get_connection
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django_ratelimit.decorators import ratelimit
+from anymail.exceptions import AnymailError
+from .forms import ContactForm
+from .prices import get_benchmarks
+
+logger = logging.getLogger(__name__)
+
+
+def home(request):
+    """
+    Home page view for OTEC.
+    Renders the main landing page with company information,
+    commodities, trust badges, and global reach details.
+    """
+    contact_form = ContactForm()
+
+    context = {
+        'company_name': 'Ocean Technology and Energy Corporation',
+        'page_title': 'Australian Commodity Market Maker',
+        'contact_form': contact_form,
+        'benchmarks': get_benchmarks(),
+    }
+    return render(request, 'home/home.html', context)
+
+
+@csrf_exempt
+@ratelimit(key='ip', rate='5/h', method='POST', block=False)
+def contact_submit(request):
+    """
+    Handle contact form submissions via AJAX.
+    Validates the form and sends emails using django.core.mail.send_mail.
+    Rate limited per IP; controlled by the RATELIMIT_ENABLE setting.
+    """
+    if request.method != 'POST':
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid request method'
+        }, status=405)
+
+    if getattr(request, 'limited', False):
+        return JsonResponse({
+            'success': False,
+            'error': 'Too many submissions. Please try again later.'
+        }, status=429)
+
+    form = ContactForm(request.POST)
+
+    if not form.is_valid():
+        return JsonResponse({
+            'success': False,
+            'errors': form.errors.get_json_data()
+        }, status=400)
+
+    # Extract cleaned data
+    name = form.cleaned_data['name']
+    email = form.cleaned_data['email']
+    phone = form.cleaned_data.get('phone', 'Not provided')
+    company = form.cleaned_data.get('company', 'Not provided')
+    subject = form.cleaned_data['subject']
+    message = form.cleaned_data['message']
+
+    # Get the full subject text
+    subject_choices = dict(form.fields['subject'].choices)
+    full_subject = subject_choices.get(subject, subject)
+
+    # Create email content for the company
+    company_email_body = f"""
+New Contact Form Submission
+
+Name: {name}
+Email: {email}
+Phone: {phone}
+Company: {company}
+Subject: {full_subject}
+
+Message:
+{message}
+
+---
+This email was sent from the OTEC website.
+"""
+
+    # Create email content for the visitor (auto-reply)
+    visitor_email_body = f"""
+Dear {name},
+
+Thank you for contacting OTEC.
+
+We have received your inquiry regarding "{full_subject}" and our team will review it shortly. We typically respond within 1-2 business days.
+
+Your inquiry details:
+Subject: {full_subject}
+Message: {message}
+
+If you have any urgent matters, please call us at +61 4 2485 4899.
+
+Best regards,
+The OTEC Team
+
+---
+Ocean Technology and Energy Corporation
+Premium Australian Hard Coking Coal & Iron Ore Exporter
+Sydney, Australia
+info@otec.ltd
+www.otec.ltd
+"""
+
+    # Anymail rides on Django's ordinary EmailMessage — the `tags` and
+    # `metadata` attributes below are picked up by the Brevo API backend and
+    # silently ignored by the SMTP fallback, so both configurations work.
+    notification = EmailMessage(
+        subject=f'Website Contact: {full_subject} - {name}',
+        body=company_email_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[settings.CONTACT_EMAIL],
+        # Replying to the notification reaches the enquirer, not the mailbox
+        # the site sends from.
+        reply_to=[email],
+    )
+    notification.tags = ['contact-form', f'subject-{subject}']
+    notification.metadata = {'form': 'contact', 'subject': subject, 'name': name}
+
+    auto_reply = EmailMessage(
+        subject='Thank you for contacting OTEC',
+        body=visitor_email_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[email],
+        reply_to=[settings.CONTACT_EMAIL],
+    )
+    auto_reply.tags = ['contact-form', 'auto-reply']
+    auto_reply.metadata = {'form': 'contact', 'subject': subject}
+
+    try:
+        # One connection for both messages — with the API backend that is a
+        # single HTTP session rather than two SMTP handshakes.
+        connection = get_connection()
+        connection.send_messages([notification, auto_reply])
+
+    except AnymailError as exc:
+        # ESP rejected the send (bad key, unverified sender, suppressed
+        # recipient). Log the detail; show the visitor something actionable.
+        logger.exception('Brevo rejected the contact-form send: %s', exc)
+        return JsonResponse({
+            'success': False,
+            'error': 'We could not send your message right now. '
+                     'Please email info@otec-au.com directly.'
+        }, status=502)
+
+    except Exception as exc:
+        logger.exception('Contact form send failed: %s', exc)
+        return JsonResponse({
+            'success': False,
+            'error': 'We could not send your message right now. '
+                     'Please email info@otec-au.com directly.'
+        }, status=500)
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Thank you for your message. We will get back to you soon!'
+    })
+
+
+def about(request):
+    contact_form = ContactForm()
+    return render(request, 'home/about.html', {'contact_form': contact_form})
+
+def certification(request):
+    contact_form = ContactForm()
+    return render(request, 'home/certification.html', {'contact_form': contact_form})
