@@ -1,0 +1,114 @@
+{% extends "home/base.html" %}
+
+{% block title %}Commodities | OTEC Markets{% endblock %}
+
+{% block extra_css %}
+.catalogue-head { padding: calc(var(--nav-h) + 4.8rem) 0 3rem; border-bottom: 1px solid var(--iron); }
+.catalogue-head h1 { max-width: 850px; margin-top: 1rem; font: 600 4.2rem/1.02 var(--f-display); text-transform: uppercase; overflow-wrap: anywhere; }
+.catalogue-head p { max-width: 650px; margin-top: 1.3rem; color: #B2C1D3; font-size: 1rem; line-height: 1.8; }
+.catalogue-note { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--iron); color: var(--ash); font: 400 .7rem/1.7 var(--f-mono); letter-spacing: .06em; }
+.commodity-section { padding: 3.2rem 0; border-bottom: 1px solid var(--iron); scroll-margin-top: calc(var(--nav-h) + 1rem); }
+.commodity-heading { display: grid; grid-template-columns: 4rem minmax(0, 1fr) auto; gap: 1rem; align-items: baseline; padding-bottom: 1.3rem; border-bottom: 1px solid var(--iron); }
+.commodity-heading__index { color: var(--brand-3); font: 500 .72rem/1.4 var(--f-mono); }
+.commodity-heading h2 { font: 600 2rem/1.15 var(--f-display); text-transform: uppercase; }
+.commodity-heading__state { color: var(--ash); font: 400 .66rem/1.5 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; text-align: right; }
+.commodity-description { max-width: 700px; margin: 1.2rem 0 1.8rem 5rem; color: var(--ash); font-size: .92rem; line-height: 1.75; }
+.grade-block { margin: 2.3rem 0 0 5rem; }
+.grade-block + .grade-block { padding-top: 2rem; border-top: 1px solid rgba(121,214,255,.14); }
+.grade-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .9rem; }
+.grade-heading h3 { font: 600 1rem/1.4 var(--f-ui); text-transform: uppercase; letter-spacing: .07em; }
+.grade-heading span { color: var(--ash); font: 400 .65rem/1.5 var(--f-mono); text-transform: uppercase; }
+.spec-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.spec-table th, .spec-table td { padding: .78rem .9rem; text-align: left; border-bottom: 1px solid rgba(121,214,255,.12); }
+.spec-table thead th { color: var(--ash); font: 500 .62rem/1.5 var(--f-mono); text-transform: uppercase; letter-spacing: .12em; }
+.spec-table tbody th { width: 32%; color: #DCE7F3; font: 500 .74rem/1.5 var(--f-mono); }
+.spec-table tbody td { color: var(--bone); font-variant-numeric: tabular-nums; }
+.spec-table .unsupplied { color: #8293A8; font-style: italic; }
+.spec-footnote { margin-top: .8rem; color: #8293A8; font-size: .72rem; line-height: 1.7; }
+.catalogue-contact { display: flex; justify-content: space-between; align-items: center; gap: 2rem; padding: 3rem 0; }
+.catalogue-contact h2 { font: 600 1.35rem/1.3 var(--f-display); text-transform: uppercase; }
+.catalogue-contact p { max-width: 580px; margin-top: .5rem; color: var(--ash); font-size: .9rem; line-height: 1.7; }
+@media (max-width: 680px) {
+    .catalogue-head { padding-top: calc(var(--nav-h) + 3.5rem); }
+    .catalogue-head h1 { font-size: 2rem; }
+    .commodity-section { padding: 2.5rem 0; }
+    .commodity-heading { grid-template-columns: 2.2rem 1fr; gap: .7rem; }
+    .commodity-heading h2 { font-size: 1.55rem; }
+    .commodity-heading__state { grid-column: 2; text-align: left; }
+    .commodity-description, .grade-block { margin-left: 0; }
+    .grade-heading { align-items: flex-start; flex-direction: column; gap: .25rem; }
+    .spec-table th, .spec-table td { padding: .68rem .55rem; }
+    .spec-table tbody th { width: 42%; }
+    .catalogue-contact { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 360px) { .catalogue-head h1 { font-size: 1.6rem; } }
+{% endblock %}
+
+{% block content %}
+<header class="catalogue-head">
+    <div class="container">
+        <span class="section-kicker">OTEC / Physical markets</span>
+        <h1>Commodities</h1>
+        <p>Market coverage across physical commodities. Specifications vary by origin, producer and transaction; the framework below identifies relevant fields without implying available inventory or an offer.</p>
+        <p class="catalogue-note">Specification framework only. No offer, price or availability is implied. Confirm current requirements and terms directly with OTEC.</p>
+    </div>
+</header>
+
+<div class="container">
+    <section class="commodity-section" id="coal">
+        <div class="commodity-heading"><span class="commodity-heading__index">01</span><h2>Coal</h2><span class="commodity-heading__state">Grades &amp; specification fields</span></div>
+        <p class="commodity-description">Coal is assessed by rank, intended use and a combination of calorific, ash, sulfur and moisture characteristics. Grades below retain the figures previously published on this site; further fields remain unprovided.</p>
+        <div class="grade-block">
+            <div class="grade-heading"><h3>Sub-bituminous coal</h3><span>Thermal grade / published site figures</span></div>
+            <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Published range</th></tr></thead><tbody>
+                <tr><th scope="row">GAR</th><td>4,200&ndash;5,500 kcal/kg</td></tr><tr><th scope="row">Ash</th><td>3&ndash;10%</td></tr><tr><th scope="row">Sulfur</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Moisture</th><td>18&ndash;38%</td></tr><tr><th scope="row">Volatile matter</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Fixed carbon</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">NAR, size, origin</th><td class="unsupplied">To be confirmed</td></tr>
+            </tbody></table>
+        </div>
+        <div class="grade-block">
+            <div class="grade-heading"><h3>Thermal coal</h3><span>Published site figures</span></div>
+            <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Published range</th></tr></thead><tbody>
+                <tr><th scope="row">GAR</th><td>5,500&ndash;7,000 kcal/kg</td></tr><tr><th scope="row">Ash</th><td>3&ndash;12%</td></tr><tr><th scope="row">Sulfur</th><td>0.5&ndash;1.5%</td></tr><tr><th scope="row">Moisture, volatile matter, fixed carbon</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">NAR, size, origin</th><td class="unsupplied">To be confirmed</td></tr>
+            </tbody></table>
+        </div>
+        <div class="grade-block">
+            <div class="grade-heading"><h3>Coking coal</h3><span>Metallurgical grade / published site figures</span></div>
+            <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Published range</th></tr></thead><tbody>
+                <tr><th scope="row">GCR</th><td>7,500+ kcal/kg</td></tr><tr><th scope="row">CSR</th><td>&gt;60%</td></tr><tr><th scope="row">Ash</th><td>&lt;8%</td></tr><tr><th scope="row">Sulfur</th><td>&lt;1%</td></tr><tr><th scope="row">Moisture, volatile matter, fixed carbon</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">NAR, size, origin</th><td class="unsupplied">To be confirmed</td></tr>
+            </tbody></table>
+        </div>
+        <p class="spec-footnote">Figures are transcribed from existing public site content and should be confirmed against current transaction documentation.</p>
+    </section>
+
+    <section class="commodity-section" id="iron-ore">
+        <div class="commodity-heading"><span class="commodity-heading__index">02</span><h2>Iron Ore</h2><span class="commodity-heading__state">Specification fields</span></div>
+        <p class="commodity-description">Physical iron ore specifications are assessed by grade, impurities, moisture, sizing and origin.</p>
+        <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Fe</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">SiO&#8322; / Al&#8322;O&#8323;</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">P / S</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Moisture / size / origin</th><td class="unsupplied">To be confirmed</td></tr></tbody></table>
+    </section>
+
+    <section class="commodity-section" id="aluminium">
+        <div class="commodity-heading"><span class="commodity-heading__index">03</span><h2>Aluminium</h2><span class="commodity-heading__state">Specification fields</span></div>
+        <p class="commodity-description">Potential transaction specifications are defined by product form, grade and the commercial requirements of counterparties.</p>
+        <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Purity / grade</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Form / alloy</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Origin</th><td class="unsupplied">To be confirmed</td></tr></tbody></table>
+    </section>
+
+    <section class="commodity-section" id="grain">
+        <div class="commodity-heading"><span class="commodity-heading__index">04</span><h2>Grain</h2><span class="commodity-heading__state">Specification fields</span></div>
+        <p class="commodity-description">Grain specifications depend on crop, grade, quality measures and delivery requirements.</p>
+        <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Grade / moisture</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Protein / test weight</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Foreign material / origin</th><td class="unsupplied">To be confirmed</td></tr></tbody></table>
+    </section>
+
+    <section class="commodity-section" id="gold">
+        <div class="commodity-heading"><span class="commodity-heading__index">05</span><h2>Gold</h2><span class="commodity-heading__state">Specification fields</span></div>
+        <p class="commodity-description">Gold transactions are described by purity, fineness, physical form and refinery documentation.</p>
+        <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Purity / fineness</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Form / refinery</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Origin</th><td class="unsupplied">To be confirmed</td></tr></tbody></table>
+    </section>
+
+    <section class="commodity-section" id="copper">
+        <div class="commodity-heading"><span class="commodity-heading__index">06</span><h2>Copper</h2><span class="commodity-heading__state">Specification fields</span></div>
+        <p class="commodity-description">Copper specifications may include grade, contained copper, impurities and product form.</p>
+        <table class="spec-table"><thead><tr><th scope="col">Specification</th><th scope="col">Status</th></tr></thead><tbody><tr><th scope="row">Cu % / grade</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Impurities</th><td class="unsupplied">Not supplied</td></tr><tr><th scope="row">Form / origin</th><td class="unsupplied">To be confirmed</td></tr></tbody></table>
+    </section>
+
+    <section class="catalogue-contact"><div><h2>Discuss specifications and market requirements.</h2><p>Product specifications, availability and transaction terms are confirmed individually. Contact OTEC to discuss a requirement.</p></div><button class="btn btn-primary contact-trigger">Open Enquiry</button></section>
+</div>
+{% endblock %}

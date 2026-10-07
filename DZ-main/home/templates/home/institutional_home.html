@@ -1,0 +1,224 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}OTEC | Physical Commodity Markets{% endblock %}
+
+{% block extra_css %}
+.institutional-hero {
+    padding: calc(var(--nav-h) + 5.5rem) 0 5rem;
+    border-bottom: 1px solid var(--iron);
+}
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 5rem; align-items: end; }
+.hero-grid > * { min-width: 0; }
+.hero-kicker, .section-kicker, .market-index, .signal-label {
+    color: var(--brand-3); font: 500 .7rem/1.4 var(--f-mono); letter-spacing: .16em; text-transform: uppercase;
+}
+.institutional-hero h1 {
+    max-width: 900px; margin-top: 1.5rem; font: 700 5.2rem/.98 var(--f-display);
+    text-transform: uppercase; color: var(--bone);
+}
+.institutional-hero h1 span { color: var(--brand-3); }
+.hero-copy { max-width: 42rem; margin-top: 2rem; color: #B2C1D3; font-size: 1.08rem; line-height: 1.8; }
+.hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 2rem; }
+.hero-actions .btn { font-size: .72rem; }
+.hero-register { border-top: 1px solid var(--iron); }
+.hero-register__row { display: grid; grid-template-columns: 2.5rem 1fr; gap: .8rem; padding: 1rem 0; border-bottom: 1px solid var(--iron); }
+.hero-register__n { color: var(--brand-3); font: 500 .72rem/1.5 var(--f-mono); }
+.hero-register__label { color: var(--bone); font: 600 .78rem/1.5 var(--f-ui); text-transform: uppercase; letter-spacing: .06em; }
+.hero-register__detail { display: block; color: var(--ash); font: 400 .78rem/1.6 var(--f-ui); margin-top: .2rem; }
+.section-intro { display: grid; grid-template-columns: minmax(200px, .7fr) minmax(0, 1.3fr); gap: 4rem; align-items: start; margin-bottom: 3rem; }
+.section-intro h2, .story-panel h2, .team-panel h2 { margin-top: .8rem; font: 600 2.65rem/1.08 var(--f-display); text-transform: uppercase; }
+.section-intro p { max-width: 660px; color: #B2C1D3; font-size: 1.04rem; line-height: 1.85; }
+.principles { border-top: 1px solid var(--iron); }
+.principle { display: grid; grid-template-columns: 4.5rem minmax(190px, .65fr) minmax(0, 1.35fr); gap: 1.5rem; padding: 1.45rem 0; border-bottom: 1px solid var(--iron); align-items: baseline; }
+.principle__index { color: var(--brand-3); font: 500 .7rem/1.5 var(--f-mono); }
+.principle h3 { font: 600 1.02rem/1.4 var(--f-ui); text-transform: uppercase; letter-spacing: .05em; }
+.principle p { color: var(--ash); line-height: 1.75; font-size: .94rem; }
+.edge-band { background: #071522; border-top: 1px solid rgba(121,214,255,.12); border-bottom: 1px solid rgba(121,214,255,.12); }
+.edge-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--iron); }
+.edge-item { padding: 1.6rem 1.7rem 1.8rem 0; border-bottom: 1px solid var(--iron); }
+.edge-item:nth-child(3n+2), .edge-item:nth-child(3n+3) { border-left: 1px solid var(--iron); padding-left: 1.7rem; }
+.edge-item__number { color: var(--brand-3); font: 500 .68rem/1.4 var(--f-mono); }
+.edge-item h3 { margin-top: .85rem; font: 600 1rem/1.4 var(--f-ui); letter-spacing: .045em; text-transform: uppercase; }
+.edge-item p { margin-top: .45rem; max-width: 34ch; color: var(--ash); font-size: .88rem; line-height: 1.7; }
+.market-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--iron); }
+.market-link { min-height: 116px; display: grid; grid-template-columns: 3.2rem 1fr auto; gap: 1rem; align-items: center; padding: 1.2rem 1.25rem 1.2rem 0; color: var(--bone); text-decoration: none; border-bottom: 1px solid var(--iron); }
+.market-link:nth-child(2n) { padding-left: 1.25rem; border-left: 1px solid var(--iron); }
+.market-link:hover .market-link__name { color: var(--brand-3); }
+.market-link__index { color: var(--brand-3); font: 500 .7rem/1.4 var(--f-mono); }
+.market-link__name { font: 600 1.35rem/1.2 var(--f-display); text-transform: uppercase; transition: color .15s ease; }
+.market-link__arrow { color: var(--brand-3); font: 400 1.2rem/1 var(--f-ui); }
+.story-panel { display: grid; grid-template-columns: .7fr 1.3fr; gap: 4rem; border-top: 1px solid var(--iron); border-bottom: 1px solid var(--iron); padding: 2.6rem 0; }
+.story-placeholder { min-height: 120px; display: flex; align-items: center; border-left: 1px solid var(--brand-3); padding-left: 1.5rem; color: var(--ash); font-size: .92rem; line-height: 1.7; }
+.team-panel { min-height: 130px; display: grid; grid-template-columns: .7fr 1.3fr; gap: 4rem; align-items: start; border-top: 1px solid var(--iron); border-bottom: 1px solid var(--iron); padding: 2.4rem 0; }
+.team-placeholder { min-height: 76px; border-left: 1px solid var(--iron); }
+.contact-band { display: flex; justify-content: space-between; align-items: center; gap: 2rem; border-top: 1px solid var(--iron); padding-top: 2rem; }
+.contact-band p { max-width: 55ch; margin-top: .6rem; color: var(--ash); line-height: 1.7; }
+.contact-band h2 { font: 600 1.5rem/1.2 var(--f-display); text-transform: uppercase; }
+.photo-break { max-width: 1280px; margin: 0 auto; padding: 0 2rem 1rem; }
+.photo-break--mid { max-width: 1010px; }
+.photo-break--narrow { max-width: 870px; }
+.photo-break__image { display: block; width: 100%; aspect-ratio: 2.15 / 1; object-fit: cover; border: 1px solid rgba(121,214,255,.18); }
+.photo-break--mid .photo-break__image, .photo-break--narrow .photo-break__image { aspect-ratio: 1.9 / 1; }
+.photo-break__caption { display: flex; justify-content: space-between; gap: 1rem; padding-top: .65rem; border-top: 1px solid var(--iron); color: var(--ash); font: 400 .62rem/1.6 var(--f-mono); letter-spacing: .11em; text-transform: uppercase; }
+@media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-register { max-width: 650px; }
+    .section-intro, .story-panel, .team-panel { grid-template-columns: 1fr; gap: 1.2rem; }
+    .institutional-hero h1 { font-size: clamp(3.5rem, 8vw, 4.4rem); }
+}
+@media (max-width: 680px) {
+    .institutional-hero { padding-top: calc(var(--nav-h) + 3.7rem); }
+    .institutional-hero h1 { font-size: 2.1rem; }
+    .hero-copy { font-size: .98rem; }
+    .section-intro h2, .story-panel h2, .team-panel h2 { font-size: 2rem; }
+    .institutional-hero h1, .section-intro h2, .principle h3, .principle p,
+    .edge-item h3, .edge-item p, .contact-band h2, .contact-band p { overflow-wrap: anywhere; }
+    .principle { grid-template-columns: 2.5rem 1fr; gap: .55rem 1rem; }
+    .principle p { grid-column: 2; }
+    .edge-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .edge-item, .edge-item:nth-child(3n+2), .edge-item:nth-child(3n+3) { min-width: 0; padding: 1.25rem .9rem 1.4rem 0; border-left: 0; }
+    .edge-item:nth-child(2n) { border-left: 1px solid var(--iron); padding-left: .9rem; }
+    .market-list { grid-template-columns: 1fr; }
+    .market-link, .market-link:nth-child(2n) { min-height: 86px; padding: 1rem 0; border-left: 0; }
+    .market-link__name { font-size: 1.12rem; }
+    .contact-band { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 680px) {
+    .photo-break { padding: 0 1.25rem .5rem; }
+    .photo-break__image, .photo-break--mid .photo-break__image, .photo-break--narrow .photo-break__image { aspect-ratio: 1.45 / 1; }
+    .photo-break__caption { font-size: .56rem; }
+}
+@media (max-width: 360px) {
+    .institutional-hero h1 { font-size: 1.75rem; }
+    .section-intro h2, .story-panel h2, .team-panel h2 { font-size: 1.6rem; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="institutional-hero">
+    <div class="container hero-grid">
+        <div>
+            <p class="hero-kicker">Australian commodity market maker &amp; intermediary</p>
+            <h1>Physical commodity markets.<br><span>Structured. Connected. Executed.</span></h1>
+            <p class="hero-copy">OTEC operates across physical commodity markets, connecting counterparties and facilitating transactions. Proprietary tools, algorithms and market intelligence support price analysis, opportunity identification and disciplined commercial execution.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="{% url 'commodities' %}">Markets we operate in</a>
+                <button class="btn btn-secondary contact-trigger">Contact OTEC</button>
+            </div>
+        </div>
+        <aside class="hero-register" aria-label="OTEC market activity">
+            <div class="hero-register__row"><span class="hero-register__n">01</span><div class="hero-register__label">Market intelligence<span class="hero-register__detail">Analysis of price, structure and physical market conditions.</span></div></div>
+            <div class="hero-register__row"><span class="hero-register__n">02</span><div class="hero-register__label">Counterparty connectivity<span class="hero-register__detail">Bringing market participants together around commercial requirements.</span></div></div>
+            <div class="hero-register__row"><span class="hero-register__n">03</span><div class="hero-register__label">Physical execution<span class="hero-register__detail">Structuring and facilitating transactions across physical flows.</span></div></div>
+        </aside>
+    </div>
+</header>
+
+<figure class="photo-break" aria-label="Shipping activity at an international harbour">
+    <img class="photo-break__image" src="{% static 'images/harbour-shipping.jpg' %}" alt="Container vessels moving through a harbour at sunset" loading="eager" fetchpriority="high">
+    <figcaption class="photo-break__caption"><span>Physical trade</span><span>Shipping &amp; port infrastructure</span></figcaption>
+</figure>
+
+<section class="band" id="market-position">
+    <div class="container">
+        <div class="section-intro">
+            <div><span class="section-kicker">01 / Market position</span><h2>Providing liquidity across physical markets.</h2></div>
+            <p>OTEC works between buyers and sellers to improve access to liquidity and connect commercial requirements. Market tools, data and analysis help identify pricing dislocations, assess opportunities and structure physical transactions with care.</p>
+        </div>
+        <div class="principles">
+            <article class="principle"><span class="principle__index">01</span><h3>Intermediation</h3><p>Connect supply and demand through a direct understanding of counterparties, specifications and transaction requirements.</p></article>
+            <article class="principle"><span class="principle__index">02</span><h3>Price discovery</h3><p>Assess market structure and relative value to support informed commercial discussions.</p></article>
+            <article class="principle"><span class="principle__index">03</span><h3>Physical flows</h3><p>Facilitate transactions grounded in the practical requirements of physical commodity trade.</p></article>
+        </div>
+    </div>
+</section>
+
+<figure class="photo-break photo-break--mid">
+    <img class="photo-break__image" src="{% static 'images/container-terminal.jpg' %}" alt="Container ship alongside a busy cargo terminal" loading="lazy">
+    <figcaption class="photo-break__caption"><span>Market connectivity</span><span>Cargo handling &amp; terminals</span></figcaption>
+</figure>
+
+<section class="band edge-band" id="proprietary-edge">
+    <div class="container">
+        <div class="section-intro">
+            <div><span class="section-kicker">02 / Proprietary edge</span><h2>Technology in service of the trading operation.</h2></div>
+            <p>OTEC's proprietary tools and algorithms support market intelligence and execution. They inform the work of the trading operation; they are not a substitute for commercial judgement or counterparty relationships.</p>
+        </div>
+        <div class="edge-grid">
+            <article class="edge-item"><span class="edge-item__number">01 / Analyse</span><h3>Market analysis</h3><p>Bring together market signals and relevant trading information.</p></article>
+            <article class="edge-item"><span class="edge-item__number">02 / Compare</span><h3>Pricing analysis</h3><p>Evaluate relative pricing and identify potential dislocations.</p></article>
+            <article class="edge-item"><span class="edge-item__number">03 / Connect</span><h3>Counterparty matching</h3><p>Assess commercial requirements across buyers and sellers.</p></article>
+            <article class="edge-item"><span class="edge-item__number">04 / Identify</span><h3>Opportunity assessment</h3><p>Surface potential opportunities for further commercial review.</p></article>
+            <article class="edge-item"><span class="edge-item__number">05 / Execute</span><h3>Execution support</h3><p>Support transaction structuring and informed execution decisions.</p></article>
+            <article class="edge-item"><span class="edge-item__number">06 / Consider</span><h3>Risk analysis</h3><p>Consider market and transaction exposures as part of the process.</p></article>
+        </div>
+    </div>
+</section>
+
+<figure class="photo-break photo-break--narrow">
+    <img class="photo-break__image" src="{% static 'images/night-port.jpg' %}" alt="Aerial view of illuminated vessels and port infrastructure at night" loading="lazy">
+    <figcaption class="photo-break__caption"><span>Global markets</span><span>Port operations</span></figcaption>
+</figure>
+
+<section class="band" id="markets">
+    <div class="container">
+        <div class="section-intro">
+            <div><span class="section-kicker">03 / Markets</span><h2>Markets OTEC operates in.</h2></div>
+            <p>OTEC operates across a range of physical commodity markets. Each market has distinct specifications, counterparties and commercial structures.</p>
+        </div>
+        <div class="market-list">
+            <a class="market-link" href="{% url 'commodities' %}#coal"><span class="market-link__index">01</span><span class="market-link__name">Coal</span><span class="market-link__arrow">&#8594;</span></a>
+            <a class="market-link" href="{% url 'commodities' %}#iron-ore"><span class="market-link__index">02</span><span class="market-link__name">Iron Ore</span><span class="market-link__arrow">&#8594;</span></a>
+            <a class="market-link" href="{% url 'commodities' %}#aluminium"><span class="market-link__index">03</span><span class="market-link__name">Aluminium</span><span class="market-link__arrow">&#8594;</span></a>
+            <a class="market-link" href="{% url 'commodities' %}#grain"><span class="market-link__index">04</span><span class="market-link__name">Grain</span><span class="market-link__arrow">&#8594;</span></a>
+            <a class="market-link" href="{% url 'commodities' %}#gold"><span class="market-link__index">05</span><span class="market-link__name">Gold</span><span class="market-link__arrow">&#8594;</span></a>
+            <a class="market-link" href="{% url 'commodities' %}#copper"><span class="market-link__index">06</span><span class="market-link__name">Copper</span><span class="market-link__arrow">&#8594;</span></a>
+        </div>
+    </div>
+</section>
+
+<figure class="photo-break photo-break--mid">
+    <img class="photo-break__image" src="{% static 'images/coal-vessel.jpg' %}" alt="Bulk carrier berthed beside a coal stockpile and loading conveyors" loading="lazy">
+    <figcaption class="photo-break__caption"><span>Coal markets</span><span>Bulk cargo &amp; export infrastructure</span></figcaption>
+</figure>
+
+<section class="band band--pit" id="otec-story">
+    <div class="container">
+        <div class="story-panel">
+            <div><span class="section-kicker">04 / Company</span><h2>The OTEC Story</h2></div>
+            <div class="story-placeholder">Company story to be provided. This space is reserved for OTEC's history, experience and commercial perspective.</div>
+        </div>
+    </div>
+</section>
+
+<section class="band" id="what-we-do">
+    <div class="container">
+        <div class="section-intro">
+            <div><span class="section-kicker">05 / Mandate</span><h2>What we do.</h2></div>
+            <p>OTEC provides market intermediation across physical commodity transactions. We connect counterparties, contribute liquidity, apply proprietary analysis and support commercial execution from opportunity assessment through transaction structuring.</p>
+        </div>
+        <div class="principles">
+            <article class="principle"><span class="principle__index">A</span><h3>Market connectivity</h3><p>Build commercial connections between market participants with aligned requirements.</p></article>
+            <article class="principle"><span class="principle__index">B</span><h3>Trading intelligence</h3><p>Use market knowledge and proprietary analysis to inform opportunity assessment.</p></article>
+            <article class="principle"><span class="principle__index">C</span><h3>Commercial execution</h3><p>Structure and facilitate physical commodity transactions with discipline.</p></article>
+        </div>
+    </div>
+</section>
+
+<section class="band band--pit" id="team">
+    <div class="container">
+        <div class="team-panel">
+            <div><span class="section-kicker">06 / People</span><h2>Meet the Team</h2></div>
+            <div class="team-placeholder" aria-label="Team profiles will be added here"></div>
+        </div>
+    </div>
+</section>
+
+<section class="band">
+    <div class="container contact-band">
+        <div><span class="section-kicker">07 / Contact</span><h2>Discuss a market requirement.</h2><p>For counterparty introductions, market enquiries or commercial discussions, contact OTEC directly.</p></div>
+        <button class="btn btn-primary contact-trigger">Open Enquiry</button>
+    </div>
+</section>
+{% endblock %}

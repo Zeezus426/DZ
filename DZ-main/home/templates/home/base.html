@@ -1,0 +1,848 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#081827">
+    <title>{% block title %}OTEC | Ocean Technology and Energy Corporation{% endblock %}</title>
+    <link rel="preload" href="{% static 'fonts/EurostileExtendedBlack-unicode.ttf' %}" as="font" type="font/ttf" crossorigin>
+    <style>
+        /* =====================================================================
+           OTEC — Ocean Technology and Energy Corporation
+           Updated brand direction: blue corporate precision, marine signal,
+           and a cleaner editorial layout to align with the refreshed logo.
+           ===================================================================== */
+
+        @font-face {
+            font-family: 'Eurostile Extended';
+            src: url("{% static 'fonts/EurostileExtendedBlack-unicode.ttf' %}") format('truetype');
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --void:   #040B16;
+            --pit:    #081827;
+            --steel:  #0E2238;
+            --iron:   #1A3B5C;
+            --brand:  #0D4AA8;
+            --brand-2:#1B74D1;
+            --brand-3:#79D6FF;
+            --accent: #DCEBFF;
+            --alert:  #FF6B57;
+            --bone:   #F2F7FF;
+            --ash:    #A9B9CF;
+            --acid:   var(--brand);
+            --cyan:   var(--brand-3);
+
+            --otec-font: 'Eurostile Extended';
+            --f-display: var(--otec-font), sans-serif;
+            --f-ui:      var(--otec-font), sans-serif;
+            --f-mono:    var(--otec-font), sans-serif;
+
+            --notch: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+            --notch-sm: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+
+            --nav-h: 82px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--f-ui);
+            font-weight: 400;
+            font-size: 17px;
+            line-height: 1.65;
+            color: var(--bone);
+            background: var(--void);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        button, input, select, textarea, option { font-family: var(--otec-font), sans-serif; }
+
+        /* ---------------------------------------------------------------------
+           Ambient CRT layer — scanlines + vignette. Decorative only, never
+           intercepts pointer events.
+           --------------------------------------------------------------------- */
+        .fx { position: fixed; inset: 0; pointer-events: none; z-index: 900; }
+
+        .fx__scan {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(0,0,0,0)   0px,
+                rgba(0,0,0,0)   2px,
+                rgba(0,0,0,.22) 3px,
+                rgba(0,0,0,.22) 4px
+            );
+            opacity: .38;
+        }
+
+        .fx__vig {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%);
+        }
+
+        /* ---------------------------------------------------------------------
+           Reusable chrome
+           --------------------------------------------------------------------- */
+
+        /* Notched frame: outer paints the 1px edge, inner paints the surface. */
+        .frame { background: var(--iron); clip-path: var(--notch); padding: 1px; }
+        .frame--acid { background: var(--acid); }
+        .frame--cyan { background: var(--cyan); }
+        .frame__in { background: var(--steel); clip-path: var(--notch); height: 100%; }
+
+        /* Yellow/black hazard tape — the divider between bands */
+        .hazard {
+            height: 14px;
+            background: repeating-linear-gradient(
+                135deg,
+                var(--acid) 0 14px,
+                var(--void) 14px 28px
+            );
+        }
+
+        .rule { height: 1px; background: var(--iron); border: 0; }
+
+        /* Monospace eyebrow label */
+        .tag {
+            font-family: var(--f-mono);
+            font-size: .74rem;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--acid);
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+        }
+
+        .tag--cyan { color: var(--cyan); }
+        .tag--ash  { color: var(--ash); }
+
+        .container { max-width: 1220px; margin: 0 auto; padding: 0 2rem; }
+
+        .band { padding: 104px 0; position: relative; }
+        .band--pit { background: var(--pit); }
+
+        .band__head { margin-bottom: 3.5rem; }
+
+        .band__head h2 {
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: .95;
+            letter-spacing: -.02em;
+            text-transform: uppercase;
+            margin: .75rem 0 0;
+        }
+
+        .band__head p { color: var(--ash); max-width: 58ch; margin-top: 1rem; }
+
+        /* Buttons ------------------------------------------------------------- */
+        .btn {
+            font-family: var(--f-mono);
+            font-size: .82rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: .95rem 2rem;
+            display: inline-block;
+            cursor: pointer;
+            border: 0;
+            clip-path: var(--notch-sm);
+            transition: background .16s linear, color .16s linear, transform .16s linear;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            color: var(--bone);
+            font-weight: 700;
+            box-shadow: 0 18px 40px rgba(13, 74, 168, 0.28);
+        }
+        .btn-primary:hover { background: linear-gradient(135deg, var(--brand-2) 0%, var(--brand-3) 100%); color: var(--void); transform: translate(-2px,-2px); }
+
+        .btn-secondary {
+            background: rgba(13, 74, 168, 0.08);
+            color: var(--accent);
+            box-shadow: inset 0 0 0 1px rgba(121, 214, 255, 0.65);
+        }
+        .btn-secondary:hover { background: rgba(121, 214, 255, 0.18); color: var(--bone); transform: translate(-2px,-2px); }
+
+        /* Focus visibility (quality floor, not decoration) */
+        a:focus-visible, button:focus-visible, input:focus-visible,
+        select:focus-visible, textarea:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 3px;
+        }
+
+        /* ---------------------------------------------------------------------
+           Navigation — HUD rail
+           --------------------------------------------------------------------- */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            z-index: 1000;
+            background: rgba(8,8,10,.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--iron);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav__brand {
+            display: flex;
+            align-items: center;
+            gap: .9rem;
+            text-decoration: none;
+            color: var(--bone);
+        }
+
+        .nav__logo {
+            display: block;
+            width: clamp(150px, 16vw, 220px);
+            height: auto;
+            filter: drop-shadow(0 8px 18px rgba(121, 214, 255, 0.15));
+        }
+
+
+        .nav__expand {
+            font-family: var(--f-mono);
+            font-size: .62rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--ash);
+            line-height: 1;
+        }
+
+        .nav__links { display: flex; list-style: none; gap: 2.25rem; align-items: center; }
+
+        .nav__links a {
+            font-family: var(--f-mono);
+            font-size: .8rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--ash);
+            text-decoration: none;
+            position: relative;
+            padding: .35rem 0;
+            transition: color .16s linear;
+        }
+
+        .nav__links a::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: -2px;
+            width: 0; height: 2px;
+            background: var(--acid);
+            transition: width .18s linear;
+        }
+
+        .nav__links a:hover { color: var(--acid); }
+        .nav__links a:hover::after { width: 100%; }
+
+        .nav__loc {
+            font-family: var(--f-mono);
+            font-size: .7rem;
+            letter-spacing: .16em;
+            color: var(--ash);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .nav__employee {
+            width: 44px;
+            height: 44px;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .nav__employee img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: invert(1);
+        }
+
+        .nav__dot {
+            width: 7px; height: 7px;
+            background: var(--acid);
+            clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        }
+
+        .nav__toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--iron);
+            color: var(--acid);
+            font-family: var(--f-mono);
+            font-size: .75rem;
+            letter-spacing: .14em;
+            padding: .5rem .85rem;
+            cursor: pointer;
+        }
+
+        /* ---------------------------------------------------------------------
+           Footer
+           --------------------------------------------------------------------- */
+        .foot { background: var(--pit); border-top: 1px solid var(--iron); padding: 72px 0 28px; }
+
+        .foot__grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1.2fr;
+            gap: 3.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .foot h4 {
+            font-family: var(--f-mono);
+            font-size: .76rem;
+            font-weight: 400;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--acid);
+            margin-bottom: 1.4rem;
+        }
+
+        .foot p { color: var(--ash); font-size: .95rem; }
+
+        .foot ul { list-style: none; }
+        .foot li { margin-bottom: .7rem; color: var(--ash); font-size: .95rem; }
+
+        .foot a { color: var(--ash); text-decoration: none; transition: color .16s linear; }
+        .foot a:hover { color: var(--acid); }
+
+        .foot__k {
+            font-family: var(--f-mono);
+            font-size: .68rem;
+            letter-spacing: .16em;
+            color: #5C6068;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .foot__btn {
+            background: none;
+            border: 0;
+            color: var(--ash);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: .95rem;
+            padding: 0;
+            transition: color .16s linear;
+        }
+        .foot__btn:hover { color: var(--acid); }
+
+        .foot__base {
+            border-top: 1px solid var(--iron);
+            padding-top: 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-family: var(--f-mono);
+            font-size: .7rem;
+            letter-spacing: .14em;
+            color: #5C6068;
+            text-transform: uppercase;
+        }
+
+        /* ---------------------------------------------------------------------
+           Contact modal
+           --------------------------------------------------------------------- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4,4,6,.86);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--acid);
+            clip-path: var(--notch);
+            padding: 1px;
+            width: 100%;
+            max-width: 620px;
+            max-height: 90vh;
+        }
+
+        .modal__in {
+            background: var(--steel);
+            clip-path: var(--notch);
+            max-height: calc(90vh - 2px);
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--acid);
+            color: var(--void);
+            padding: 1.1rem 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-family: var(--f-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+
+        .modal-close {
+            background: var(--void);
+            border: 0;
+            color: var(--acid);
+            font-family: var(--f-mono);
+            font-size: 1.1rem;
+            width: 30px; height: 30px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-close:hover { background: var(--alert); color: var(--bone); }
+
+        .modal-body { padding: 1.9rem 1.75rem 2.1rem; }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: .45rem;
+            font-family: var(--f-mono);
+            font-size: .72rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--ash);
+        }
+
+        .form-group label span { color: var(--alert); }
+
+        /* Matches the class set on widgets in home/forms.py */
+        .form-input {
+            width: 100%;
+            padding: .8rem .95rem;
+            background: var(--void);
+            border: 1px solid var(--iron);
+            border-radius: 0;
+            color: var(--bone);
+            font-family: var(--f-ui);
+            font-size: 1rem;
+            transition: border-color .16s linear;
+        }
+
+        .form-input::placeholder { color: #5C6068; }
+        .form-input:focus { outline: none; border-color: var(--acid); }
+        .form-input.textarea { resize: vertical; min-height: 112px; }
+        select.form-input { appearance: none; cursor: pointer; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--acid);
+            color: var(--void);
+            border: 0;
+            clip-path: var(--notch-sm);
+            font-family: var(--f-mono);
+            font-size: .86rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .16s linear;
+        }
+        .btn-submit:hover { background: var(--bone); }
+        .btn-submit:disabled { opacity: .55; cursor: not-allowed; }
+
+        .form-error {
+            color: var(--alert);
+            font-family: var(--f-mono);
+            font-size: .72rem;
+            letter-spacing: .08em;
+            margin-top: .35rem;
+        }
+
+        .form-success, .form-failure {
+            padding: .85rem 1rem;
+            margin-bottom: 1.1rem;
+            font-family: var(--f-mono);
+            font-size: .78rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+        .form-success { background: var(--acid); color: var(--void); }
+        .form-failure { background: var(--alert); color: var(--bone); }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 12px; height: 12px;
+            border: 2px solid rgba(8,8,10,.25);
+            border-top-color: var(--void);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            margin-left: .5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ---------------------------------------------------------------------
+           Interior page header (about / certification)
+           --------------------------------------------------------------------- */
+        .page-head {
+            padding: calc(var(--nav-h) + 76px) 0 60px;
+            border-bottom: 1px solid var(--iron);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-head h1 {
+            font-family: var(--f-display);
+            font-weight: 700;
+            font-size: clamp(2.4rem, 7vw, 4.5rem);
+            line-height: .92;
+            letter-spacing: -.02em;
+            text-transform: uppercase;
+            margin: .8rem 0 0;
+        }
+
+        .page-head p { color: var(--ash); margin-top: 1rem; max-width: 56ch; }
+
+        /* ---------------------------------------------------------------------
+           Responsive
+           --------------------------------------------------------------------- */
+        @media (max-width: 900px) {
+            .foot__grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            body { font-size: 16px; }
+            .container { padding: 0 1.25rem; }
+            .nav { padding: 0 1.25rem; }
+            .band { padding: 72px 0; }
+
+            .nav__loc { display: none; }
+            .nav__employee { display: flex; flex: 0 0 40px; width: 40px; height: 40px; }
+            .nav__toggle { display: block; }
+
+            .nav__links {
+                position: fixed;
+                top: var(--nav-h); left: 0; right: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                background: var(--pit);
+                border-bottom: 1px solid var(--iron);
+                padding: .5rem 1.25rem 1.25rem;
+                display: none;
+            }
+
+            .nav__links.is-open { display: flex; }
+            .nav__links li { width: 100%; border-top: 1px solid var(--iron); }
+            .nav__links a { display: block; padding: .95rem 0; }
+
+            .foot__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* Honour reduced-motion: kill ambient animation, keep the layout intact */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: .001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .001ms !important;
+            }
+            .fx__scan { display: none; }
+        }
+
+        /* Institutional OTEC presentation */
+        .fx, .hazard { display: none; }
+        body { background: var(--void); color: var(--bone); }
+        .container { max-width: 1280px; }
+        .nav {
+            height: var(--nav-h);
+            padding: 0 max(2rem, calc((100vw - 1280px) / 2));
+            background: rgba(4, 11, 22, .97);
+            border-bottom-color: rgba(121, 214, 255, .18);
+            backdrop-filter: blur(14px);
+        }
+        .nav__brand { flex: 0 0 auto; }
+        .nav__logo { width: clamp(150px, 15vw, 194px); filter: none; }
+        .nav__links { gap: clamp(1rem, 2.1vw, 2rem); }
+        .nav__links a {
+            color: #C3D0E0;
+            font-family: var(--f-ui);
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .11em;
+        }
+        .nav__links a::after { height: 1px; background: var(--brand-3); }
+        .nav__links a:hover { color: var(--brand-3); }
+        .nav__loc { font-size: .62rem; letter-spacing: .1em; }
+        .nav__dot { background: var(--brand-3); clip-path: none; border-radius: 50%; }
+        .nav__toggle { border-color: var(--iron); color: var(--bone); font-family: var(--f-ui); }
+        .tag { color: var(--brand-3); letter-spacing: .14em; }
+        .tag--cyan { color: var(--brand-3); }
+        .btn { clip-path: none; border-radius: 2px; font-family: var(--f-ui); letter-spacing: .1em; }
+        .btn-primary { background: var(--brand); color: white; box-shadow: none; }
+        .btn-primary:hover { background: var(--brand-2); color: white; transform: none; }
+        .btn-secondary { background: transparent; color: var(--bone); box-shadow: inset 0 0 0 1px var(--iron); }
+        .btn-secondary:hover { background: rgba(121, 214, 255, .1); color: white; transform: none; }
+        .frame { background: var(--iron); clip-path: none; padding: 1px; }
+        .frame__in { clip-path: none; }
+        .frame--acid { background: var(--brand-3); }
+        .frame--cyan { background: var(--brand-3); }
+        .band { padding: clamp(4.5rem, 8vw, 7rem) 0; }
+        .band--pit { background: #071522; }
+        .band__head h2, .page-head h1 { letter-spacing: -.025em; }
+        .foot { background: #071522; border-top-color: rgba(121, 214, 255, .18); }
+        .foot h4 { color: var(--brand-3); font-family: var(--f-ui); letter-spacing: .12em; }
+        .foot a:hover, .foot__btn:hover { color: var(--brand-3); }
+        .foot__k, .foot__base { color: #8194AA; }
+        .modal { background: var(--brand-3); clip-path: none; border-radius: 3px; }
+        .modal__in { clip-path: none; }
+        .modal-header { background: var(--brand); color: white; }
+        .modal-close { background: var(--void); color: white; }
+        .form-input:focus { border-color: var(--brand-3); }
+        .btn-submit { background: var(--brand); color: white; clip-path: none; border-radius: 2px; font-family: var(--f-ui); }
+        .btn-submit:hover { background: var(--brand-2); }
+        .form-success { background: var(--brand); color: white; }
+        @media (max-width: 760px) {
+            .nav { padding: 0 1.25rem; }
+            .nav__links { background: #071522; }
+            .nav__links li { border-top-color: rgba(121, 214, 255, .14); }
+            .nav__toggle { padding: .55rem .8rem; }
+        }
+
+        /* Page-specific styles */
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <div class="fx" aria-hidden="true">
+        <div class="fx__scan"></div>
+        <div class="fx__vig"></div>
+    </div>
+
+    {% include "home/partials/navbar.html" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "home/partials/footer.html" %}
+
+    <!-- Contact Form Modal -->
+    <div class="modal-overlay" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+        <div class="modal">
+            <div class="modal__in">
+                <div class="modal-header">
+                    <h2 id="contact-modal-title">Open Enquiry</h2>
+                    <button class="modal-close" id="close-modal" aria-label="Close enquiry form">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="form-message"></div>
+                    <form id="contact-form" method="POST" action="/contact/">
+                        {% csrf_token %}
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_name">Name <span>*</span></label>
+                                {{ contact_form.name }}
+                                <div class="form-error" id="error-name"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_email">Email <span>*</span></label>
+                                {{ contact_form.email }}
+                                <div class="form-error" id="error-email"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id_phone">Phone</label>
+                                {{ contact_form.phone }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_company">Company</label>
+                                {{ contact_form.company }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_subject">Subject <span>*</span></label>
+                            {{ contact_form.subject }}
+                            <div class="form-error" id="error-subject"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_message">Message <span>*</span></label>
+                            {{ contact_form.message }}
+                            <div class="form-error" id="error-message"></div>
+                        </div>
+
+                        <button type="submit" class="btn-submit" id="submit-btn">Send Enquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            /* -------------------------------------------------------------
+               Mobile navigation
+               ------------------------------------------------------------- */
+            var navToggle = document.getElementById('nav-toggle');
+            var navLinks  = document.getElementById('nav-links');
+
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', function () {
+                    var open = navLinks.classList.toggle('is-open');
+                    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+            }
+
+            /* -------------------------------------------------------------
+               Contact modal. Any element carrying .contact-trigger opens it,
+               which covers the nav link, hero CTA and both footer buttons.
+               ------------------------------------------------------------- */
+            var modal       = document.getElementById('contact-modal');
+            var closeButton = document.getElementById('close-modal');
+            var form        = document.getElementById('contact-form');
+            var submitBtn   = document.getElementById('submit-btn');
+            var formMessage = document.getElementById('form-message');
+            var lastFocused = null;
+
+            function openModal(e) {
+                if (e) { e.preventDefault(); }
+                lastFocused = document.activeElement;
+                modal.classList.add('active');
+                if (navLinks) { navLinks.classList.remove('is-open'); }
+                var first = modal.querySelector('.form-input');
+                if (first) { first.focus(); }
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                if (lastFocused) { lastFocused.focus(); }
+            }
+
+            document.querySelectorAll('.contact-trigger').forEach(function (btn) {
+                btn.addEventListener('click', openModal);
+            });
+
+            closeButton.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) { closeModal(); }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modal.classList.contains('active')) { closeModal(); }
+            });
+
+            /* -------------------------------------------------------------
+               Contact form submission
+               ------------------------------------------------------------- */
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                formMessage.innerHTML = '';
+                document.querySelectorAll('.form-error').forEach(function (el) { el.textContent = ''; });
+                document.querySelectorAll('.form-input').forEach(function (el) { el.style.borderColor = ''; });
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Sending<span class="loading-spinner"></span>';
+
+                try {
+                    var response = await fetch('/contact/', {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+
+                    var data = await response.json();
+
+                    if (data.success) {
+                        formMessage.innerHTML = '<div class="form-success"></div>';
+                        formMessage.firstChild.textContent = data.message;
+                        form.reset();
+                        setTimeout(function () {
+                            closeModal();
+                            formMessage.innerHTML = '';
+                        }, 3000);
+                    } else {
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(function (field) {
+                                var errorDiv   = document.getElementById('error-' + field);
+                                var inputField = document.getElementById('id_' + field);
+                                if (errorDiv)   { errorDiv.textContent = data.errors[field][0].message; }
+                                if (inputField) { inputField.style.borderColor = '#FF2E4C'; }
+                            });
+                        }
+                        if (data.error) {
+                            formMessage.innerHTML = '<div class="form-failure"></div>';
+                            formMessage.firstChild.textContent = data.error;
+                        }
+                    }
+                } catch (err) {
+                    formMessage.innerHTML = '<div class="form-failure">Connection failed. Try again.</div>';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Enquiry';
+                }
+            });
+
+            /* -------------------------------------------------------------
+               Reveal-on-scroll for the grade meters. Adds .is-in once, so
+               the range bands animate out from their lower bound.
+               ------------------------------------------------------------- */
+            var reveals = document.querySelectorAll('[data-reveal]');
+
+            if (!window.IntersectionObserver) {
+                reveals.forEach(function (el) { el.classList.add('is-in'); });
+            } else {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-in');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.25, rootMargin: '0px 0px -40px 0px' });
+
+                reveals.forEach(function (el) { io.observe(el); });
+            }
+        })();
+
+        {% block extra_js %}{% endblock %}
+    </script>
+</body>
+</html>
