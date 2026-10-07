@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'anymail',
     'home',
     'orders',
@@ -30,6 +31,19 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # Keeps /portal/, /accounts/ and /admin/ out of search indexes. Safe in
+    # every environment (it's a pure path-keyed response header, no host
+    # logic), so unlike CanonicalHostRedirectMiddleware it lives in the base
+    # list rather than being spliced in only for prod.
+    #
+    # MUST sit ABOVE PortalLoginRequiredMiddleware. That middleware short
+    # -circuits an unauthenticated /portal/ request with a redirect, and Django
+    # never runs the middleware *below* the one that short-circuits — so with
+    # this listed after it, /portal/ 302s went out with no X-Robots-Tag at all
+    # (/admin/ still got one, because its redirect comes from the view, deeper
+    # in the chain). Listing it above means it wraps the portal middleware and
+    # tags the redirect too.
+    'core.middleware.NoIndexHeaderMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     # Backstop for the internal portal — must follow AuthenticationMiddleware
     # so request.user is populated.
@@ -102,6 +116,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Whitenoise configuration (middleware/storage are wired up in prod.py only)
@@ -172,6 +187,23 @@ SECURE_HSTS_PRELOAD = False
 
 # Allowed hosts (overridden in environment-specific settings)
 ALLOWED_HOSTS = []
+
+# ==========================================
+# CANONICAL HOST (SEO — duplicate-content redirect)
+# ==========================================
+# The one host every alias (www., otec-au.com, www.otec-au.com, ...) should
+# be redirected to. See core/middleware.py:CanonicalHostRedirectMiddleware.
+# Configurable via env rather than hardcoded in the middleware so a domain
+# change doesn't require a code change.
+CANONICAL_HOST = config('CANONICAL_HOST', default='otec.ltd')
+
+# Master off-switch for the redirect, defaulting to off here so local
+# development is safe by construction even if this file's default is ever
+# read directly. core/settings/prod.py is the only place that sets this to
+# True — and it also only adds CanonicalHostRedirectMiddleware to
+# MIDDLEWARE in prod.py, so the behaviour is disabled twice over for
+# local/dev.
+CANONICAL_HOST_REDIRECT_ENABLED = False
 
 
 # ==========================================

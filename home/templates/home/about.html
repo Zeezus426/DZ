@@ -1,6 +1,22 @@
 {% extends "home/base.html" %}
 
-{% block title %}About | OTEC{% endblock %}
+{% block title %}About Ocean Technology and Energy Corporation (OTEC){% endblock %}
+
+{% block meta_description %}Ocean Technology and Energy Corporation is an Australian trading intermediary connecting coal and iron ore producers with buyers across Asia.{% endblock %}
+
+{% block og_title %}About Ocean Technology and Energy Corporation (OTEC){% endblock %}
+
+{% block og_description %}Ocean Technology and Energy Corporation is an Australian trading intermediary connecting coal and iron ore producers with buyers across Asia.{% endblock %}
+
+{% block schema_graph_extra %},
+            {
+                "@type": "BreadcrumbList",
+                "@id": "https://otec.ltd/about/#breadcrumb",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://otec.ltd/"},
+                    {"@type": "ListItem", "position": 2, "name": "About", "item": "https://otec.ltd/about/"}
+                ]
+            }{% endblock %}
 
 {% block extra_css %}
 .page-head::after {
@@ -80,7 +96,7 @@
         </div>
 
         <div class="prose">
-            <p><strong>Ocean Technology and Energy Corporation</strong> is an Australian-based commodity trading company specializing in the export of coal and iron ore. We connect Australian mining operations with international markets across Asia and Europe.</p>
+            <p><strong>Ocean Technology and Energy Corporation</strong> is an Australian-based commodity trading company specializing in the export of coal and iron ore. We connect Australian mining operations with buyers across four export markets &mdash; China, India, South Korea and Indonesia.</p>
             <p>Our focus is on reliable sourcing, quality assurance, and building long-term relationships with both suppliers and buyers. We understand the complexities of international commodity trading and provide seamless solutions for our partners.</p>
         </div>
     </div>

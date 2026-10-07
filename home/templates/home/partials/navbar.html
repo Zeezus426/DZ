@@ -1,24 +1,23 @@
+{% load static %}
 <nav class="nav">
-    <a class="nav__brand" href="{% url 'home' %}">
-        <span class="nav__mark">OTEC</span>
-        <span class="nav__expand">Ocean Technology <br>&amp; Energy Corp</span>
+    <a class="nav__brand" href="{% url 'home' %}" aria-label="OTEC home page">
+        <img class="nav__logo" src="{% static 'images/otec.png' %}" alt="OTEC logo">
     </a>
 
     <button class="nav__toggle" id="nav-toggle" aria-controls="nav-links" aria-expanded="false">Menu</button>
 
     <ul class="nav__links" id="nav-links">
         <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'home' %}#commodities">Commodities</a></li>
+        <li><a href="{% url 'commodities' %}">Commodities</a></li>
         <li><a href="{% url 'about' %}">About</a></li>
-<!--        <li><a href="{% url 'certification' %}">Certification</a></li>-->
+        <li><a href="{% url 'blog' %}">Blog</a></li>
         <li><a href="#contact" class="contact-trigger">Contact</a></li>
         {% if user.is_authenticated %}
             <li><a href="{% url 'orders:order_list' %}" style="color: var(--acid)">Portal</a></li>
         {% endif %}
     </ul>
 
-    <div class="nav__loc">
-        <span class="nav__dot" aria-hidden="true"></span>
-        <span>SYD &middot; AU</span>
-    </div>
+    <a class="nav__loc nav__employee" href="{% url 'login' %}" aria-label="Employee admin login" title="Employee admin login">
+        <img src="{% static 'images/coal-login.png' %}" alt="">
+    </a>
 </nav>

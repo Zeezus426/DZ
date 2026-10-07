@@ -28,14 +28,67 @@ CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(
 ))
 
 # ---------------------------------------------------------------------------
+# Canonical host redirect (SEO)
+# otec.ltd, www.otec.ltd, otec-au.com and www.otec-au.com all currently
+# serve byte-identical content — this collapses them onto https://otec.ltd
+# with a 301. Only enabled/added here, never in base.py/local.py, so a
+# developer on http://localhost:8000/ is never bounced to the live domain.
+# ---------------------------------------------------------------------------
+CANONICAL_HOST_REDIRECT_ENABLED = True
+
+MIDDLEWARE = list(MIDDLEWARE)
+# Inserted first (index 0), ahead of SecurityMiddleware, so a host/scheme
+# combination that needs both an SSL redirect *and* a host redirect
+# (e.g. http://www.otec.ltd/x) resolves in one 301 straight to
+# https://otec.ltd/x instead of two chained redirects. See the docstring on
+# CanonicalHostRedirectMiddleware in core/middleware.py for the full
+# reasoning, including why PREPEND_WWW is not a substitute for this.
+MIDDLEWARE.insert(0, 'core.middleware.CanonicalHostRedirectMiddleware')
+
+# ---------------------------------------------------------------------------
 # Static files (WhiteNoise)
 # Local dev serves static directly via runserver (base.py intentionally omits
 # WhiteNoise so source edits in static/ appear on refresh without collectstatic).
 # In production we serve the collected files through WhiteNoise, with gzip/brotli
 # compression and hashed, cache-busted filenames.
 # ---------------------------------------------------------------------------
-MIDDLEWARE = list(MIDDLEWARE)
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # immediately after SecurityMiddleware
+# Index 2: after CanonicalHostRedirectMiddleware (0) and SecurityMiddleware
+# (now pushed to 1), same relative position ("immediately after
+# SecurityMiddleware") as before that middleware existed.
+MIDDLEWARE.insert(2, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# ---------------------------------------------------------------------------
+# GZip compression for rendered HTML (SEO/perf audit finding: HTML was being
+# served uncompressed — identical content-length with and without
+# Accept-Encoding: gzip).
+#
+# Positioned *after* WhiteNoiseMiddleware (index 3), not before it: WhiteNoise
+# short-circuits the middleware chain for static-file requests it recognizes
+# (it returns the response itself without calling further down the chain), so
+# with GZip listed after it, GZip's request-phase code never even runs for
+# those requests — WhiteNoise's own CompressedManifestStaticFilesStorage
+# already pre-compresses collected static assets, so there is nothing for
+# GZipMiddleware to usefully do there. This leaves GZip to do the one thing
+# it's actually here for: compressing Django's dynamically rendered
+# responses (the HTML pages, robots.txt, sitemap.xml) that WhiteNoise never
+# touches. (It's also a no-op safety net either way: GZipMiddleware skips
+# any response that already has a Content-Encoding header, so even a static
+# file that reached it would not be double-compressed.)
+#
+# BREACH consideration (Django's own docs warn about compressing responses
+# containing secrets): Django has masked the CSRF token per-response since
+# masking was introduced (a fresh random mask XORed with the secret each
+# render), so the token literal is not stable across responses — that
+# defeats the repeated-fixed-secret oracle BREACH depends on. None of these
+# pages reflect attacker-controlled input back into the HTML body on GET
+# (the contact form posts to a separate JSON endpoint, not back into a
+# rendered page), so there's no attacker-chosen plaintext sitting alongside
+# a secret in the same compressed response either. Given both mitigations
+# hold, compressing globally here is judged safe; if a page is ever added
+# that reflects raw query-string/user input into rendered HTML, revisit this
+# for that view specifically (e.g. exclude it, or move compression to the
+# proxy where it can be controlled per-path).
+MIDDLEWARE.insert(3, 'django.middleware.gzip.GZipMiddleware')
 
 STORAGES = {
     'default': {

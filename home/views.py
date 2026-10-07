@@ -27,7 +27,7 @@ def home(request):
         'contact_form': contact_form,
         'benchmarks': get_benchmarks(),
     }
-    return render(request, 'home/home.html', context)
+    return render(request, 'home/institutional_home.html', context)
 
 
 @csrf_exempt
@@ -169,7 +169,17 @@ www.otec.ltd
 
 def about(request):
     contact_form = ContactForm()
-    return render(request, 'home/about.html', {'contact_form': contact_form})
+    return render(request, 'home/institutional_about.html', {'contact_form': contact_form})
+
+
+def commodities(request):
+    contact_form = ContactForm()
+    return render(request, 'home/commodities.html', {'contact_form': contact_form})
+
+
+def blog(request):
+    contact_form = ContactForm()
+    return render(request, 'home/blog.html', {'contact_form': contact_form})
 
 def certification(request):
     contact_form = ContactForm()

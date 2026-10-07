@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /portal/
+Disallow: /accounts/
+Disallow: /admin/
+
+# Deliberate decision: we do NOT block AI crawlers here (GPTBot, ClaudeBot,
+# PerplexityBot, OAI-SearchBot, Google-Extended, CCBot, and others).
+# OTEC is a B2B coal/iron ore export site whose entire commercial goal is
+# being found by buyers doing supplier research — including research done
+# through AI answer engines. Silence means allow, so we simply don't add
+# blocks. If someone is tempted to "harden" this file later by adding
+# AI-crawler disallows (e.g. copy-pasting a generic security template),
+# don't — that would cut off a discovery channel this site depends on.
+# Revisit only if the business explicitly decides otherwise.
+
+Sitemap: https://otec.ltd/sitemap.xml

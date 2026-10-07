@@ -2,6 +2,67 @@
 
 {% block title %}OTEC | Australian Commodity Market Maker{% endblock %}
 
+{% block meta_description %}Ocean Technology and Energy Corporation exports Australian coal and iron ore to China, India, South Korea and Indonesia. Specifications available on enquiry.{% endblock %}
+
+{% block og_title %}OTEC | Australian Commodity Market Maker{% endblock %}
+
+{% block og_description %}Ocean Technology and Energy Corporation exports Australian coal and iron ore to China, India, South Korea and Indonesia. Specifications available on enquiry.{% endblock %}
+
+{% block schema_graph_extra %},
+            {
+                "@type": "Service",
+                "@id": "https://otec.ltd/#commodity-export-service",
+                "name": "Coal and Iron Ore Export",
+                "serviceType": "Bulk commodity export trading",
+                "description": "Export trading of thermal, sub-bituminous and coking coal and iron ore from Australia to buyers in China, India, South Korea and Indonesia.",
+                "provider": { "@id": "https://otec.ltd/#organization" },
+                "areaServed": [
+                    { "@type": "Country", "name": "China" },
+                    { "@type": "Country", "name": "India" },
+                    { "@type": "Country", "name": "South Korea" },
+                    { "@type": "Country", "name": "Indonesia" }
+                ],
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Commodity Lines",
+                    "itemListElement": [
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Sub-bituminous Coal",
+                                "description": "GAR 4,200-5,500 kcal/kg, moisture 18-38%, ash 3-10%."
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Thermal Coal",
+                                "description": "GAR 5,500-7,000 kcal/kg, ash 3-12%, sulfur 0.5-1.5%."
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Coking Coal",
+                                "description": "GCR 7,500+ kcal/kg, CSR greater than 60%, ash less than 8%, sulfur less than 1%."
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Iron Ore",
+                                "description": "62% Fe. Additional specifications available on request."
+                            }
+                        }
+                    ]
+                }
+            }
+{% endblock %}
+
 {% block extra_css %}
 /* =========================================================================
    HERO — the thesis: a graded carbon ladder, stated as a spec sheet
@@ -164,8 +225,26 @@
     letter-spacing: .13em;
     text-transform: uppercase;
     line-height: 1.7;
-    color: #5C6068;
+    color: var(--ash-dim);
     margin-top: .85rem;
+}
+
+/* Key phrases that stop the ticker being misread as a live quote — kept
+   brighter than the rest of the disclaimer so they survive at a glance. */
+.ticker__src strong { font-weight: inherit; color: var(--bone); }
+
+/* Visually hidden but still readable by assistive tech / text extractors —
+   used to self-describe the spec <dl>s in place of a <table><caption>. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 @keyframes slide {
@@ -313,7 +392,7 @@
     grid-column: 2;
 }
 
-.meter__v em { font-style: normal; color: #5C6068; }
+.meter__v em { font-style: normal; color: var(--ash-dim); }
 
 .meter__track {
     grid-column: 1 / -1;
@@ -353,7 +432,7 @@
     font-size: .64rem;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: #5C6068;
+    color: var(--ash-dim);
     margin-top: auto;   /* floor-aligned; gap comes from padding, not margin */
     padding-top: 1.5rem;
     border-top: 1px solid var(--iron);
@@ -403,7 +482,7 @@
     font-size: .68rem;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: #5C6068;
+    color: var(--ash-dim);
     margin-top: .5rem;
 }
 
@@ -482,7 +561,7 @@
          translates by -50% for a seamless loop — hence the two-pass loop. It is
          aria-hidden for that reason; the accessible statement of the same
          figures is the caption underneath. -->
-    <div class="ticker">
+    <div class="ticker" aria-describedby="ticker-disclaimer">
         <div class="ticker__row" aria-hidden="true">
             {% for pass in "12" %}
             {% for px in benchmarks.series %}
@@ -499,11 +578,11 @@
 
     {% if benchmarks %}
     <div class="container">
-        <p class="ticker__src">
+        <p class="ticker__src" id="ticker-disclaimer">
             {% for px in benchmarks.series %}{{ px.label }} {{ px.unit }} {{ px.value }}{% if not forloop.last %} &middot; {% endif %}{% endfor %}
-            &nbsp;&mdash;&nbsp; benchmark monthly average, {{ benchmarks.as_of }} &middot;
+            &nbsp;&mdash;&nbsp; <strong>benchmark monthly average</strong>, {{ benchmarks.as_of }} &middot;
             source {{ benchmarks.source }}{% if benchmarks.stale %} &middot; awaiting refresh{% endif %} &middot;
-            indicative only, not a quotation
+            indicative only, <strong>not a quotation</strong>
         </p>
     </div>
     {% endif %}
@@ -538,23 +617,24 @@
                     <div class="grade__body">
                         <p>Medium-rank thermal coal ideal for utility-scale electricity. Low emissions and cost-effective energy output.</p>
 
-                        <div class="grade__specs">
+                        <h4 id="specs-subbit" class="visually-hidden">Sub-bituminous Coal specifications</h4>
+                        <dl class="grade__specs" aria-labelledby="specs-subbit">
                             <div class="meter">
-                                <span class="meter__k">GAR</span>
-                                <span class="meter__v">4,200&ndash;5,500 <em>/ 8,000</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:52.5%; --b:68.75%; --d:0ms;"></span></span>
+                                <dt class="meter__k">GAR</dt>
+                                <dd class="meter__v">4,200&ndash;5,500 kcal/kg <em>/ 8,000</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:52.5%; --b:68.75%; --d:0ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Moisture</span>
-                                <span class="meter__v">18&ndash;38% <em>/ 50%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:36%; --b:76%; --d:90ms;"></span></span>
+                                <dt class="meter__k">Moisture</dt>
+                                <dd class="meter__v">18&ndash;38% <em>/ 50%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:36%; --b:76%; --d:90ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Ash</span>
-                                <span class="meter__v">3&ndash;10% <em>/ 40%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:7.5%; --b:25%; --d:180ms;"></span></span>
+                                <dt class="meter__k">Ash</dt>
+                                <dd class="meter__v">3&ndash;10% <em>/ 40%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:7.5%; --b:25%; --d:180ms;"></span></dd>
                             </div>
-                        </div>
+                        </dl>
 
                         <div class="grade__scale">Scale &mdash; GAR 0&ndash;8,000 kcal/kg &middot; moisture 0&ndash;50% &middot; ash 0&ndash;40%</div>
                     </div>
@@ -571,23 +651,24 @@
                     <div class="grade__body">
                         <p>High-quality thermal coal for power generation. Consistent calorific value and low sulfur content for efficient energy production.</p>
 
-                        <div class="grade__specs">
+                        <h4 id="specs-thermal" class="visually-hidden">Thermal Coal specifications</h4>
+                        <dl class="grade__specs" aria-labelledby="specs-thermal">
                             <div class="meter">
-                                <span class="meter__k">GAR</span>
-                                <span class="meter__v">5,500&ndash;7,000 <em>/ 8,000</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:68.75%; --b:87.5%; --d:0ms;"></span></span>
+                                <dt class="meter__k">GAR</dt>
+                                <dd class="meter__v">5,500&ndash;7,000 kcal/kg <em>/ 8,000</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:68.75%; --b:87.5%; --d:0ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Ash</span>
-                                <span class="meter__v">3&ndash;12% <em>/ 40%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:7.5%; --b:30%; --d:90ms;"></span></span>
+                                <dt class="meter__k">Ash</dt>
+                                <dd class="meter__v">3&ndash;12% <em>/ 40%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:7.5%; --b:30%; --d:90ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Sulfur</span>
-                                <span class="meter__v">0.5&ndash;1.5% <em>/ 3%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:16.6%; --b:50%; --d:180ms;"></span></span>
+                                <dt class="meter__k">Sulfur</dt>
+                                <dd class="meter__v">0.5&ndash;1.5% <em>/ 3%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:16.6%; --b:50%; --d:180ms;"></span></dd>
                             </div>
-                        </div>
+                        </dl>
 
                         <div class="grade__scale">Scale &mdash; GAR 0&ndash;8,000 kcal/kg &middot; ash 0&ndash;40% &middot; sulfur 0&ndash;3%</div>
                     </div>
@@ -604,28 +685,29 @@
                     <div class="grade__body">
                         <p>Premium metallurgical coal for steel production. Low ash content with excellent coking properties for blast furnace operations.</p>
 
-                        <div class="grade__specs">
+                        <h4 id="specs-coking" class="visually-hidden">Coking Coal specifications</h4>
+                        <dl class="grade__specs" aria-labelledby="specs-coking">
                             <div class="meter">
-                                <span class="meter__k">GCR</span>
-                                <span class="meter__v">7,500+ <em>/ 8,000</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:93.75%; --b:100%; --d:0ms;"></span></span>
+                                <dt class="meter__k">GCR</dt>
+                                <dd class="meter__v">7,500+ kcal/kg <em>/ 8,000</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:93.75%; --b:100%; --d:0ms;"></span></dd>
                             </div>
                             <div class="meter">
-                                <span class="meter__k">CSR</span>
-                                <span class="meter__v">&gt;60% <em>/ 100%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:60%; --b:100%; --d:90ms;"></span></span>
+                                <dt class="meter__k">CSR</dt>
+                                <dd class="meter__v">&gt;60% <em>/ 100%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:60%; --b:100%; --d:90ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Ash</span>
-                                <span class="meter__v">&lt;8% <em>/ 40%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:0%; --b:20%; --d:180ms;"></span></span>
+                                <dt class="meter__k">Ash</dt>
+                                <dd class="meter__v">&lt;8% <em>/ 40%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:0%; --b:20%; --d:180ms;"></span></dd>
                             </div>
                             <div class="meter meter--cyan">
-                                <span class="meter__k">Sulfur</span>
-                                <span class="meter__v">&lt;1% <em>/ 3%</em></span>
-                                <span class="meter__track"><span class="meter__band" style="--a:0%; --b:33.3%; --d:270ms;"></span></span>
+                                <dt class="meter__k">Sulfur</dt>
+                                <dd class="meter__v">&lt;1% <em>/ 3%</em></dd>
+                                <dd class="meter__track" aria-hidden="true"><span class="meter__band" style="--a:0%; --b:33.3%; --d:270ms;"></span></dd>
                             </div>
-                        </div>
+                        </dl>
 
                         <div class="grade__scale">Scale &mdash; GCR 0&ndash;8,000 kcal/kg &middot; CSR 0&ndash;100% &middot; ash 0&ndash;40% &middot; sulfur 0&ndash;3%</div>
                     </div>
@@ -648,7 +730,7 @@
                 <div class="frame__in pending">
                     <div>
                         <h4>Steelmaking feed</h4>
-                        <p>Iron ore supplied into the same markets as our coal grades, with tonnage and specification confirmed per contract.</p>
+                        <p>Iron ore supplied into the same markets as our coal grades, benchmarked at 62% Fe, with tonnage and full specification confirmed per contract.</p>
                         <span class="pending__req">Fe content, silica, alumina and moisture quoted on enquiry</span>
                     </div>
                     <button class="btn btn-secondary contact-trigger">Request specs</button>

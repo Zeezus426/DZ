@@ -1,43 +1,72 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#08080A">
-    <title>{% block title %}OTEC | Ocean Technology and Energy Corporation{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#081827">
+    <title>{% block title %}OTEC | Australian Coal &amp; Iron Ore Export{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Ocean Technology and Energy Corporation (OTEC) exports Australian thermal, sub-bituminous and coking coal and iron ore to China, India, South Korea and Indonesia.{% endblock %}">
+
+    <!-- Canonical: always the apex host, regardless of which hostname served the request.
+         https://otec.ltd must stay in sync with CANONICAL_HOST in core/settings. -->
+    <link rel="canonical" href="https://otec.ltd{{ request.path }}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="OTEC">
+    <meta property="og:title" content="{% block og_title %}OTEC | Australian Coal &amp; Iron Ore Export{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Australian export trader of thermal, sub-bituminous and coking coal, plus iron ore, shipping to China, India, South Korea and Indonesia.{% endblock %}">
+    <meta property="og:url" content="https://otec.ltd{{ request.path }}">
+    <meta property="og:locale" content="en_AU">
+    {% block og_image %}{% endblock %}
+
+    <!-- Twitter Card: no image asset exists sitewide, so summary (not summary_large_image). -->
+    <meta name="twitter:card" content="summary">
+
+    <link rel="preload" href="{% static 'fonts/EurostileExtendedBlack-unicode.ttf' %}" as="font" type="font/ttf" crossorigin>
     <style>
         /* =====================================================================
            OTEC — Ocean Technology and Energy Corporation
-           Design language: carbon black field, acid yellow as a structural
-           surface (not a glow), monospace data chrome, notched panel geometry.
+           Updated brand direction: blue corporate precision, marine signal,
+           and a cleaner editorial layout to align with the refreshed logo.
            ===================================================================== */
+
+        @font-face {
+            font-family: 'Eurostile Extended';
+            src: url("{% static 'fonts/EurostileExtendedBlack-unicode.ttf' %}") format('truetype');
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+        }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            /* Palette named for the subject: coal, carbon, ash, steel */
-            --void:   #08080A;   /* carbon — page field */
-            --pit:    #0D0E12;   /* alternate band */
-            --steel:  #16181D;   /* panel surface */
-            --iron:   #262A32;   /* panel edge */
-            --acid:   #FCEE0A;   /* signature — used as a surface, not an accent */
-            --cyan:   #00E5FF;   /* data readouts */
-            --alert:  #FF2E4C;   /* critical / chromatic aberration */
-            --bone:   #EDEBE4;   /* primary text */
-            --ash:    #9AA0A8;   /* muted text */
+            --void:   #040B16;
+            --pit:    #081827;
+            --steel:  #0E2238;
+            --iron:   #1A3B5C;
+            --brand:  #0D4AA8;
+            --brand-2:#1B74D1;
+            --brand-3:#79D6FF;
+            --accent: #DCEBFF;
+            --alert:  #FF6B57;
+            --bone:   #F2F7FF;
+            --ash:    #A9B9CF;
+            --ash-dim: #8A9199;  /* muted text, AA-safe on --void (~6.3:1) — use in place of the old #5C6068 (~3.17:1, fails AA) */
+            --acid:   var(--brand);
+            --cyan:   var(--brand-3);
 
-            --f-display: 'Chakra Petch', 'Arial Narrow', sans-serif;
-            --f-ui:      'Rajdhani', 'Segoe UI', sans-serif;
-            --f-mono:    'Share Tech Mono', ui-monospace, monospace;
+            --otec-font: 'Eurostile Extended';
+            --f-display: var(--otec-font), sans-serif;
+            --f-ui:      var(--otec-font), sans-serif;
+            --f-mono:    var(--otec-font), sans-serif;
 
-            /* The Cyberpunk panel shape: two opposing corners cut away */
-            --notch: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+            --notch: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
             --notch-sm: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 
-            --nav-h: 64px;
+            --nav-h: 82px;
         }
 
         html { scroll-behavior: smooth; }
@@ -52,6 +81,8 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
+
+        button, input, select, textarea, option { font-family: var(--otec-font), sans-serif; }
 
         /* ---------------------------------------------------------------------
            Ambient CRT layer — scanlines + vignette. Decorative only, never
@@ -149,15 +180,20 @@
             transition: background .16s linear, color .16s linear, transform .16s linear;
         }
 
-        .btn-primary { background: var(--acid); color: var(--void); font-weight: 700; }
-        .btn-primary:hover { background: var(--bone); transform: translate(-2px,-2px); }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            color: var(--bone);
+            font-weight: 700;
+            box-shadow: 0 18px 40px rgba(13, 74, 168, 0.28);
+        }
+        .btn-primary:hover { background: linear-gradient(135deg, var(--brand-2) 0%, var(--brand-3) 100%); color: var(--void); transform: translate(-2px,-2px); }
 
         .btn-secondary {
-            background: transparent;
-            color: var(--acid);
-            box-shadow: inset 0 0 0 1px var(--acid);
+            background: rgba(13, 74, 168, 0.08);
+            color: var(--accent);
+            box-shadow: inset 0 0 0 1px rgba(121, 214, 255, 0.65);
         }
-        .btn-secondary:hover { background: var(--acid); color: var(--void); transform: translate(-2px,-2px); }
+        .btn-secondary:hover { background: rgba(121, 214, 255, 0.18); color: var(--bone); transform: translate(-2px,-2px); }
 
         /* Focus visibility (quality floor, not decoration) */
         a:focus-visible, button:focus-visible, input:focus-visible,
@@ -183,18 +219,21 @@
             padding: 0 2rem;
         }
 
-        .nav__brand { display: flex; align-items: baseline; gap: .75rem; text-decoration: none; color: var(--bone); }
-
-        /* The wordmark sits in white, not the acid signature — the yellow is
-           reserved for structural surfaces and data chrome. */
-        .nav__mark {
-            font-family: var(--f-display);
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: .04em;
+        .nav__brand {
+            display: flex;
+            align-items: center;
+            gap: .9rem;
+            text-decoration: none;
             color: var(--bone);
-            line-height: 1;
         }
+
+        .nav__logo {
+            display: block;
+            width: clamp(150px, 16vw, 220px);
+            height: auto;
+            filter: drop-shadow(0 8px 18px rgba(121, 214, 255, 0.15));
+        }
+
 
         .nav__expand {
             font-family: var(--f-mono);
@@ -239,6 +278,21 @@
             display: flex;
             align-items: center;
             gap: .5rem;
+        }
+
+        .nav__employee {
+            width: 44px;
+            height: 44px;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .nav__employee img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: invert(1);
         }
 
         .nav__dot {
@@ -293,7 +347,7 @@
             font-family: var(--f-mono);
             font-size: .68rem;
             letter-spacing: .16em;
-            color: #5C6068;
+            color: var(--ash-dim);
             display: block;
             text-transform: uppercase;
         }
@@ -320,7 +374,7 @@
             font-family: var(--f-mono);
             font-size: .7rem;
             letter-spacing: .14em;
-            color: #5C6068;
+            color: var(--ash-dim);
             text-transform: uppercase;
         }
 
@@ -415,7 +469,7 @@
             transition: border-color .16s linear;
         }
 
-        .form-input::placeholder { color: #5C6068; }
+        .form-input::placeholder { color: var(--ash-dim); }
         .form-input:focus { outline: none; border-color: var(--acid); }
         .form-input.textarea { resize: vertical; min-height: 112px; }
         select.form-input { appearance: none; cursor: pointer; }
@@ -508,6 +562,7 @@
             .band { padding: 72px 0; }
 
             .nav__loc { display: none; }
+            .nav__employee { display: flex; flex: 0 0 40px; width: 40px; height: 40px; }
             .nav__toggle { display: block; }
 
             .nav__links {
@@ -541,9 +596,107 @@
             .fx__scan { display: none; }
         }
 
+        /* Institutional OTEC presentation */
+        .fx, .hazard { display: none; }
+        body { background: var(--void); color: var(--bone); }
+        .container { max-width: 1280px; }
+        .nav {
+            height: var(--nav-h);
+            padding: 0 max(2rem, calc((100vw - 1280px) / 2));
+            background: rgba(4, 11, 22, .97);
+            border-bottom-color: rgba(121, 214, 255, .18);
+            backdrop-filter: blur(14px);
+        }
+        .nav__brand { flex: 0 0 auto; }
+        .nav__logo { width: clamp(150px, 15vw, 194px); filter: none; }
+        .nav__links { gap: clamp(1rem, 2.1vw, 2rem); }
+        .nav__links a {
+            color: #C3D0E0;
+            font-family: var(--f-ui);
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .11em;
+        }
+        .nav__links a::after { height: 1px; background: var(--brand-3); }
+        .nav__links a:hover { color: var(--brand-3); }
+        .nav__loc { font-size: .62rem; letter-spacing: .1em; }
+        .nav__dot { background: var(--brand-3); clip-path: none; border-radius: 50%; }
+        .nav__toggle { border-color: var(--iron); color: var(--bone); font-family: var(--f-ui); }
+        .tag { color: var(--brand-3); letter-spacing: .14em; }
+        .tag--cyan { color: var(--brand-3); }
+        .btn { clip-path: none; border-radius: 2px; font-family: var(--f-ui); letter-spacing: .1em; }
+        .btn-primary { background: var(--brand); color: white; box-shadow: none; }
+        .btn-primary:hover { background: var(--brand-2); color: white; transform: none; }
+        .btn-secondary { background: transparent; color: var(--bone); box-shadow: inset 0 0 0 1px var(--iron); }
+        .btn-secondary:hover { background: rgba(121, 214, 255, .1); color: white; transform: none; }
+        .frame { background: var(--iron); clip-path: none; padding: 1px; }
+        .frame__in { clip-path: none; }
+        .frame--acid { background: var(--brand-3); }
+        .frame--cyan { background: var(--brand-3); }
+        .band { padding: clamp(4.5rem, 8vw, 7rem) 0; }
+        .band--pit { background: #071522; }
+        .band__head h2, .page-head h1 { letter-spacing: -.025em; }
+        .foot { background: #071522; border-top-color: rgba(121, 214, 255, .18); }
+        .foot h4 { color: var(--brand-3); font-family: var(--f-ui); letter-spacing: .12em; }
+        .foot a:hover, .foot__btn:hover { color: var(--brand-3); }
+        .foot__k, .foot__base { color: #8194AA; }
+        .modal { background: var(--brand-3); clip-path: none; border-radius: 3px; }
+        .modal__in { clip-path: none; }
+        .modal-header { background: var(--brand); color: white; }
+        .modal-close { background: var(--void); color: white; }
+        .form-input:focus { border-color: var(--brand-3); }
+        .btn-submit { background: var(--brand); color: white; clip-path: none; border-radius: 2px; font-family: var(--f-ui); }
+        .btn-submit:hover { background: var(--brand-2); }
+        .form-success { background: var(--brand); color: white; }
+        @media (max-width: 760px) {
+            .nav { padding: 0 1.25rem; }
+            .nav__links { background: #071522; }
+            .nav__links li { border-top-color: rgba(121, 214, 255, .14); }
+            .nav__toggle { padding: .55rem .8rem; }
+        }
+
         /* Page-specific styles */
         {% block extra_css %}{% endblock %}
     </style>
+
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "https://otec.ltd/#organization",
+                "name": "OTEC",
+                "alternateName": "Ocean Technology and Energy Corporation",
+                "url": "https://otec.ltd/",
+                "description": "OTEC (Ocean Technology and Energy Corporation) is an Australian B2B export trader based in Sydney, Australia, dealing in thermal, sub-bituminous and coking coal and iron ore, shipping to China, India, South Korea and Indonesia. OTEC is a coal and iron ore export trader and is not affiliated with Ocean Thermal Energy Conversion or any similarly named entity.",
+                "email": "info@otec.ltd",
+                "telephone": "+61424854899",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Sydney",
+                    "addressCountry": "AU"
+                },
+                "areaServed": [
+                    { "@type": "Country", "name": "China" },
+                    { "@type": "Country", "name": "India" },
+                    { "@type": "Country", "name": "South Korea" },
+                    { "@type": "Country", "name": "Indonesia" }
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://otec.ltd/#website",
+                "url": "https://otec.ltd/",
+                "name": "OTEC",
+                "inLanguage": "en-AU",
+                "publisher": { "@id": "https://otec.ltd/#organization" }
+            }{% block schema_graph_extra %}{% endblock %}
+        ]
+    }
+    </script>
+    {% endblock %}
 </head>
 <body>
     <div class="fx" aria-hidden="true">

@@ -15,12 +15,37 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
-from django.views.generic import RedirectView
+from django.views.decorators.cache import cache_control
+from django.views.generic import RedirectView, TemplateView
 
+from home.sitemaps import StaticPagesSitemap
 from orders.views import PortalLoginView
 
+sitemaps = {
+    'static': StaticPagesSitemap,
+}
+
 urlpatterns = [
+    # robots.txt / sitemap.xml carry no cookies and change rarely, so a
+    # short shared-cache Cache-Control is safe here even though it would
+    # NOT be safe on the public HTML pages (see the Task 6 note in the
+    # implementation report — those pages set a per-session csrftoken
+    # cookie via the embedded contact form on every GET).
+    path(
+        'robots.txt',
+        cache_control(public=True, max_age=3600)(
+            TemplateView.as_view(template_name='robots.txt', content_type='text/plain')
+        ),
+        name='robots-txt',
+    ),
+    path(
+        'sitemap.xml',
+        cache_control(public=True, max_age=3600)(sitemap),
+        {'sitemaps': sitemaps},
+        name='sitemap',
+    ),
     path('admin/', admin.site.urls),
     # Sign-in / sign-out for the internal portal. The custom login view goes
     # ahead of the include so it wins the 'login' name.
