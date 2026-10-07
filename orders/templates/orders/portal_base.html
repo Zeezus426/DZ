@@ -149,6 +149,183 @@
 
         .panel__body { padding: 1.6rem 1.5rem 1.9rem; }
 
+        /* Trade map --------------------------------------------------------- */
+        .trade-map-panel { margin-bottom: 2rem; }
+        .trade-map-panel__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .trade-map__legend {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            flex-wrap: wrap;
+            font-family: var(--f-mono);
+            font-size: .62rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--ash);
+        }
+        .legend-item { display: inline-flex; align-items: center; gap: .5rem; }
+        .legend-dot, .legend-line {
+            display: inline-block;
+            border-radius: 999px;
+            vertical-align: middle;
+        }
+        .legend-dot {
+            width: .7rem;
+            height: .7rem;
+            border: 1px solid currentColor;
+        }
+        .legend-dot--buyer { background: var(--acid); color: var(--acid); }
+        .legend-dot--seller { background: var(--cyan); color: var(--cyan); }
+        .legend-line {
+            width: 1.4rem;
+            height: 2px;
+            background: currentColor;
+        }
+        .legend-line--pending { color: var(--ash); }
+        .legend-line--confirmed { color: var(--cyan); }
+        .legend-line--in_transit { color: var(--acid); }
+        .legend-line--completed { color: #6d7681; }
+        .legend-line--delayed { color: var(--alert); }
+
+        .trade-map__content {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(220px, .9fr);
+            gap: 1.5rem;
+            padding: 1.2rem 1.5rem 1.5rem;
+        }
+        .trade-map__svg-wrap {
+            position: relative;
+            min-height: 420px;
+            background: linear-gradient(180deg, rgba(19,22,26,.95), rgba(16,17,20,.75));
+            border: 1px solid var(--iron);
+        }
+        .trade-map__svg {
+            width: 100%;
+            height: 100%;
+            min-height: 420px;
+            display: block;
+        }
+        .trade-map__world path {
+            fill: rgba(77,82,89,.35);
+            stroke: rgba(150,160,170,.38);
+            stroke-width: 1.2;
+        }
+        .trade-route {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-dasharray: 0;
+            opacity: .88;
+        }
+        .trade-route--pending { stroke: var(--ash); }
+        .trade-route--confirmed { stroke: var(--cyan); }
+        .trade-route--in_transit { stroke: var(--acid); stroke-dasharray: 10 8; }
+        .trade-route--completed { stroke: #69727D; }
+        .trade-route--delayed { stroke: var(--alert); stroke-dasharray: 3 8; }
+
+        .trade-node circle {
+            stroke-width: 2;
+        }
+        .trade-node--seller circle {
+            fill: rgba(67,211,255,.2);
+            stroke: var(--cyan);
+        }
+        .trade-node--buyer circle {
+            fill: rgba(252,238,10,.18);
+            stroke: var(--acid);
+        }
+        .trade-node text {
+            font-family: var(--f-mono);
+            font-size: 12px;
+            font-weight: 700;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            fill: var(--bone);
+        }
+
+        .trade-map__side {
+            display: grid;
+            gap: 1rem;
+            align-content: start;
+        }
+        .map-stat {
+            background: rgba(11,14,18,.7);
+            border: 1px solid var(--iron);
+            padding: 1rem 1rem .9rem;
+        }
+        .map-stat__k {
+            display: block;
+            font-family: var(--f-mono);
+            font-size: .62rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--ash);
+            margin-bottom: .6rem;
+        }
+        .map-stat__v {
+            font-family: var(--f-display);
+            font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+            letter-spacing: -.04em;
+            line-height: 1;
+            color: var(--bone);
+        }
+        .map-stat__v small { font-size: .72rem; color: var(--ash); }
+        .map-stat--cyan .map-stat__v { color: var(--cyan); }
+        .map-stat--acid .map-stat__v { color: var(--acid); }
+        .map-stat--alert .map-stat__v { color: var(--alert); }
+
+        .map-list {
+            display: grid;
+            gap: .75rem;
+            margin-top: .2rem;
+        }
+        .map-list__item {
+            padding: .85rem .9rem;
+            background: rgba(17,20,24,.72);
+            border: 1px solid var(--iron);
+        }
+        .map-list__meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .6rem;
+            margin-bottom: .3rem;
+        }
+        .map-list__ref {
+            font-family: var(--f-mono);
+            font-size: .68rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--cyan);
+        }
+        .map-list__item p {
+            margin: 0 0 .25rem;
+            color: var(--ash);
+            font-size: .85rem;
+        }
+        .map-list__item strong {
+            display: block;
+            font-family: var(--f-display);
+            font-size: 1.1rem;
+            letter-spacing: -.02em;
+            color: var(--bone);
+        }
+        .empty--map {
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: rgba(13,16,20,.5);
+            border: 1px solid var(--iron);
+        }
+
         /* Filter bar -------------------------------------------------------- */
         .filters {
             display: grid;
@@ -237,6 +414,11 @@
         .pill--alert { color: var(--alert); }
         .pill--dead  { color: #5C6068; }
         .pill--draft { color: var(--ash); }
+        .pill--pending { color: var(--ash); }
+        .pill--confirmed { color: var(--cyan); }
+        .pill--in_transit { color: var(--acid); background: rgba(252,238,10,.09); }
+        .pill--completed { color: #6d7681; }
+        .pill--delayed { color: var(--alert); }
 
         /* Commodity tag ------------------------------------------------------ */
         .branch {

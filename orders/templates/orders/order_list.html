@@ -21,6 +21,88 @@
 </div>
 
 {# Figures describe the filtered set, so they move with the filters. #}
+<div class="panel trade-map-panel">
+    <div class="panel__in">
+        <div class="panel__head trade-map-panel__head">
+            <h2>Global OTEC Trade Map</h2>
+            <div class="trade-map__legend" aria-label="Trade legend">
+                <span class="legend-item"><span class="legend-dot legend-dot--buyer"></span>Buyer</span>
+                <span class="legend-item"><span class="legend-dot legend-dot--seller"></span>Seller</span>
+                {% for item in map_data.legend %}
+                    <span class="legend-item"><span class="legend-line legend-line--{{ item.key }}"></span>{{ item.label }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="trade-map__content">
+            <div class="trade-map__svg-wrap">
+                {% if map_data.routes %}
+                <svg class="trade-map__svg" viewBox="0 0 1000 600" role="img" aria-label="Global trade map">
+                    <g class="trade-map__world">
+                        <path d="M84 185 L140 122 L208 108 L252 131 L292 170 L320 218 L288 253 L236 265 L188 280 L132 282 L96 250 Z"/>
+                        <path d="M436 148 L495 121 L582 134 L634 172 L668 215 L668 260 L631 282 L598 270 L571 289 L551 321 L508 314 L483 286 L445 260 L422 208 Z"/>
+                        <path d="M710 312 L744 285 L790 291 L820 312 L834 346 L800 374 L736 372 L700 346 Z"/>
+                        <path d="M795 405 L863 387 L922 408 L934 455 L896 498 L838 491 L796 446 Z"/>
+                        <path d="M585 403 L635 381 L679 394 L712 429 L681 465 L612 473 L578 445 Z"/>
+                    </g>
+                    {% for route in map_data.routes %}
+                        <path class="trade-route trade-route--{{ route.status }}" d="M {{ route.seller_x }} {{ route.seller_y }} Q {{ route.mid_x }} {{ route.mid_y }} {{ route.buyer_x }} {{ route.buyer_y }}"/>
+                    {% endfor %}
+                    <g class="trade-map__nodes">
+                        <g class="trade-node trade-node--seller" transform="translate({{ map_data.seller.x }}, {{ map_data.seller.y }})">
+                            <circle r="12"/>
+                            <text>S</text>
+                        </g>
+                        {% for route in map_data.routes %}
+                            <g class="trade-node trade-node--buyer" transform="translate({{ route.buyer_x }}, {{ route.buyer_y }})">
+                                <circle r="9"/>
+                                <text>B</text>
+                            </g>
+                        {% endfor %}
+                    </g>
+                </svg>
+                {% else %}
+                <div class="empty empty--map">
+                    <h3>No live trades</h3>
+                    <p>When orders are created, their buyer / seller routes appear here on the global trade map.</p>
+                </div>
+                {% endif %}
+            </div>
+            <aside class="trade-map__side">
+                <div class="map-stat">
+                    <span class="map-stat__k">Live trade routes</span>
+                    <span class="map-stat__v">{{ map_data.total_routes }}</span>
+                </div>
+                <div class="map-stat map-stat--cyan">
+                    <span class="map-stat__k">Active tonnage</span>
+                    <span class="map-stat__v">{{ totals.total_tonnage|default:0|floatformat:0|intcomma }} <small>t</small></span>
+                </div>
+                <div class="map-stat map-stat--acid">
+                    <span class="map-stat__k">Contract value</span>
+                    <span class="map-stat__v"><small>USD</small> {{ map_data.total_value|default:0|floatformat:0|intcomma }}</span>
+                </div>
+                <div class="map-stat {% if map_data.total_margin and map_data.total_margin < 0 %}map-stat--alert{% else %}map-stat--acid{% endif %}">
+                    <span class="map-stat__k">Gross margin</span>
+                    <span class="map-stat__v"><small>USD</small> {{ map_data.total_margin|default:0|floatformat:0|intcomma }}</span>
+                </div>
+                {% if map_data.routes %}
+                    <div class="map-list">
+                        {% for route in map_data.routes %}
+                            <article class="map-list__item">
+                                <div class="map-list__meta">
+                                    <span class="map-list__ref">{{ route.reference }}</span>
+                                    <span class="map-list__status pill pill--{{ route.status }}">{{ route.status_label }}</span>
+                                </div>
+                                <p>{{ route.counterparty }} <span>&middot;</span> {{ route.country }}</p>
+                                <strong>{{ route.tonnage|floatformat:0|intcomma }} t</strong>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </aside>
+        </div>
+    </div>
+</div>
+
 <div class="kpis">
     <div class="kpi">
         <span class="kpi__k">Orders {% if has_filters %}(filtered){% endif %}</span>

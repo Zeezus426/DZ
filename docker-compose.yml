@@ -15,6 +15,7 @@ services:
       - DEBUG=False
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,otec.ltd,www.otec.ltd,otec-au.com,www.otec-au.com}
       - RATELIMIT_ENABLE=${RATELIMIT_ENABLE:-False}
+      - DB_ENGINE=postgresql
       - DB_NAME=${DB_NAME:-dz}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
