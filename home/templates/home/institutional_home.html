@@ -5,9 +5,17 @@
 
 {% block extra_css %}
 .institutional-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     padding: calc(var(--nav-h) + 5.5rem) 0 5rem;
     border-bottom: 1px solid var(--iron);
 }
+.institutional-hero > .container { position: relative; z-index: 2; }
+.nav__logo { width: clamp(160px, 16vw, 208px); }
+.nav__employee { width: 48px; height: 48px; }
+.nav__employee img { object-fit: cover; }
+.photo-break--hero .photo-break__caption { top: auto; bottom: 1.2rem; }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 5rem; align-items: end; }
 .hero-grid > * { min-width: 0; }
 .hero-kicker, .section-kicker, .market-index, .signal-label {
@@ -18,7 +26,7 @@
     text-transform: uppercase; color: var(--bone);
 }
 .institutional-hero h1 span { color: var(--brand-3); }
-.hero-copy { max-width: 42rem; margin-top: 2rem; color: #B2C1D3; font-size: 1.08rem; line-height: 1.8; }
+.hero-kicker { margin-top: 2rem; }
 .hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 2rem; }
 .hero-actions .btn { font-size: .72rem; }
 .hero-register { border-top: 1px solid var(--iron); }
@@ -55,12 +63,13 @@
 .contact-band { display: flex; justify-content: space-between; align-items: center; gap: 2rem; border-top: 1px solid var(--iron); padding-top: 2rem; }
 .contact-band p { max-width: 55ch; margin-top: .6rem; color: var(--ash); line-height: 1.7; }
 .contact-band h2 { font: 600 1.5rem/1.2 var(--f-display); text-transform: uppercase; }
-.photo-break { max-width: 1280px; margin: 0 auto; padding: 0 2rem 1rem; }
-.photo-break--mid { max-width: 1010px; }
-.photo-break--narrow { max-width: 870px; }
-.photo-break__image { display: block; width: 100%; aspect-ratio: 2.15 / 1; object-fit: cover; border: 1px solid rgba(121,214,255,.18); }
-.photo-break--mid .photo-break__image, .photo-break--narrow .photo-break__image { aspect-ratio: 1.9 / 1; }
-.photo-break__caption { display: flex; justify-content: space-between; gap: 1rem; padding-top: .65rem; border-top: 1px solid var(--iron); color: var(--ash); font: 400 .62rem/1.6 var(--f-mono); letter-spacing: .11em; text-transform: uppercase; }
+.band--photo { isolation: isolate; }
+.band--photo > .container { position: relative; z-index: 2; }
+.photo-break { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+.photo-break::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4,11,22,.64), rgba(4,11,22,.42) 55%, rgba(4,11,22,.46)); }
+.institutional-hero .photo-break::after { background: linear-gradient(90deg, rgba(4,11,22,.68), rgba(4,11,22,.42) 55%, rgba(4,11,22,.5)); }
+.photo-break__image { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; opacity: .7; }
+.photo-break__caption { position: absolute; top: 1.5rem; left: max(2rem, calc((100vw - 1280px) / 2)); right: max(2rem, calc((100vw - 1280px) / 2)); z-index: 1; display: flex; justify-content: space-between; gap: 1rem; color: var(--ash); font: 400 .62rem/1.6 var(--f-mono); letter-spacing: .11em; text-transform: uppercase; }
 @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
     .hero-register { max-width: 650px; }
@@ -70,7 +79,8 @@
 @media (max-width: 680px) {
     .institutional-hero { padding-top: calc(var(--nav-h) + 3.7rem); }
     .institutional-hero h1 { font-size: 2.1rem; }
-    .hero-copy { font-size: .98rem; }
+    .nav__logo { width: 160px; }
+    .nav__employee { flex-basis: 44px; width: 44px; height: 44px; }
     .section-intro h2, .story-panel h2, .team-panel h2 { font-size: 2rem; }
     .institutional-hero h1, .section-intro h2, .principle h3, .principle p,
     .edge-item h3, .edge-item p, .contact-band h2, .contact-band p { overflow-wrap: anywhere; }
@@ -85,9 +95,7 @@
     .contact-band { align-items: flex-start; flex-direction: column; }
 }
 @media (max-width: 680px) {
-    .photo-break { padding: 0 1.25rem .5rem; }
-    .photo-break__image, .photo-break--mid .photo-break__image, .photo-break--narrow .photo-break__image { aspect-ratio: 1.45 / 1; }
-    .photo-break__caption { font-size: .56rem; }
+    .photo-break__caption { left: 1.25rem; right: 1.25rem; font-size: .56rem; }
 }
 @media (max-width: 360px) {
     .institutional-hero h1 { font-size: 1.75rem; }
@@ -97,11 +105,14 @@
 
 {% block content %}
 <header class="institutional-hero">
+    <figure class="photo-break photo-break--hero" aria-label="Shipping activity at an international harbour">
+        <img class="photo-break__image" src="{% static 'images/harbour-shipping.jpg' %}" alt="Container vessels moving through a harbour at sunset" loading="eager" fetchpriority="high">
+        <figcaption class="photo-break__caption"><span>Physical trade</span><span>Shipping &amp; port infrastructure</span></figcaption>
+    </figure>
     <div class="container hero-grid">
         <div>
-            <p class="hero-kicker">Australian commodity market maker &amp; intermediary</p>
             <h1>Physical commodity markets.<br><span>Structured. Connected. Executed.</span></h1>
-            <p class="hero-copy">OTEC operates across physical commodity markets, connecting counterparties and facilitating transactions. Proprietary tools, algorithms and market intelligence support price analysis, opportunity identification and disciplined commercial execution.</p>
+            <p class="hero-kicker">Australian commodity market maker &amp; intermediary</p>
             <div class="hero-actions">
                 <a class="btn btn-primary" href="{% url 'commodities' %}">Markets we operate in</a>
                 <button class="btn btn-secondary contact-trigger">Contact OTEC</button>
@@ -115,12 +126,11 @@
     </div>
 </header>
 
-<figure class="photo-break" aria-label="Shipping activity at an international harbour">
-    <img class="photo-break__image" src="{% static 'images/harbour-shipping.jpg' %}" alt="Container vessels moving through a harbour at sunset" loading="eager" fetchpriority="high">
-    <figcaption class="photo-break__caption"><span>Physical trade</span><span>Shipping &amp; port infrastructure</span></figcaption>
-</figure>
-
-<section class="band" id="market-position">
+<section class="band band--photo" id="market-position">
+    <figure class="photo-break" aria-label="Container ship alongside a busy cargo terminal">
+        <img class="photo-break__image" src="{% static 'images/container-terminal.jpg' %}" alt="Container ship alongside a busy cargo terminal" loading="lazy">
+        <figcaption class="photo-break__caption"><span>Market connectivity</span><span>Cargo handling &amp; terminals</span></figcaption>
+    </figure>
     <div class="container">
         <div class="section-intro">
             <div><span class="section-kicker">01 / Market position</span><h2>Providing liquidity across physical markets.</h2></div>
@@ -134,12 +144,11 @@
     </div>
 </section>
 
-<figure class="photo-break photo-break--mid">
-    <img class="photo-break__image" src="{% static 'images/container-terminal.jpg' %}" alt="Container ship alongside a busy cargo terminal" loading="lazy">
-    <figcaption class="photo-break__caption"><span>Market connectivity</span><span>Cargo handling &amp; terminals</span></figcaption>
-</figure>
-
-<section class="band edge-band" id="proprietary-edge">
+<section class="band band--photo edge-band" id="proprietary-edge">
+    <figure class="photo-break" aria-label="Aerial view of illuminated vessels and port infrastructure at night">
+        <img class="photo-break__image" src="{% static 'images/night-port.jpg' %}" alt="Aerial view of illuminated vessels and port infrastructure at night" loading="lazy">
+        <figcaption class="photo-break__caption"><span>Global markets</span><span>Port operations</span></figcaption>
+    </figure>
     <div class="container">
         <div class="section-intro">
             <div><span class="section-kicker">02 / Proprietary edge</span><h2>Technology in service of the trading operation.</h2></div>
@@ -156,12 +165,11 @@
     </div>
 </section>
 
-<figure class="photo-break photo-break--narrow">
-    <img class="photo-break__image" src="{% static 'images/night-port.jpg' %}" alt="Aerial view of illuminated vessels and port infrastructure at night" loading="lazy">
-    <figcaption class="photo-break__caption"><span>Global markets</span><span>Port operations</span></figcaption>
-</figure>
-
-<section class="band" id="markets">
+<section class="band band--photo" id="markets">
+    <figure class="photo-break" aria-label="Bulk carrier beside a coal stockpile and loading conveyors">
+        <img class="photo-break__image" src="{% static 'images/coal-vessel.jpg' %}" alt="Bulk carrier berthed beside a coal stockpile and loading conveyors" loading="lazy">
+        <figcaption class="photo-break__caption"><span>Coal markets</span><span>Bulk cargo &amp; export infrastructure</span></figcaption>
+    </figure>
     <div class="container">
         <div class="section-intro">
             <div><span class="section-kicker">03 / Markets</span><h2>Markets OTEC operates in.</h2></div>
@@ -178,12 +186,8 @@
     </div>
 </section>
 
-<figure class="photo-break photo-break--mid">
-    <img class="photo-break__image" src="{% static 'images/coal-vessel.jpg' %}" alt="Bulk carrier berthed beside a coal stockpile and loading conveyors" loading="lazy">
-    <figcaption class="photo-break__caption"><span>Coal markets</span><span>Bulk cargo &amp; export infrastructure</span></figcaption>
-</figure>
-
 <section class="band band--pit" id="otec-story">
+    </figure>
     <div class="container">
         <div class="story-panel">
             <div><span class="section-kicker">04 / Company</span><h2>The OTEC Story</h2></div>
